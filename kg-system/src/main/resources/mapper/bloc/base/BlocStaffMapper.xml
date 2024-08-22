@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.bloc.base.mapper.BlocStaffMapper">
+    <sql id="joinColumn">
+        kg_bloc_staff.id `id` ,
+                kg_bloc_staff.bloc_id `blocId` ,
+                kg_bloc_staff.uid `uid` ,
+                kg_bloc_staff.name `name` ,
+                kg_bloc_staff.phone `phone` ,
+                kg_bloc_staff.identity `identity` ,
+                kg_bloc_staff.staff_number `staffNumber` ,
+                kg_bloc_staff.identity_number `identityNumber` ,
+                kg_bloc_staff.hiredate `hiredate` ,
+                kg_bloc_staff.nation `nation` ,
+                kg_bloc_staff.marriage `marriage` ,
+                kg_bloc_staff.address `address` ,
+                kg_bloc_staff.account_address `accountAddress` ,
+                kg_bloc_staff.education `education` ,
+                kg_bloc_staff.school `school` ,
+                kg_bloc_staff.major `major` ,
+                kg_bloc_staff.staff_explain `staffExplain` ,
+                kg_bloc_staff.is_quit `isQuit` ,
+                kg_bloc_staff.quit_date `quitDate` ,
+                kg_bloc_staff.quit_reason `quitReason` ,
+                kg_bloc_staff.create_by `createBy` ,
+                kg_bloc_staff.create_time `createTime` ,
+                kg_bloc_staff.update_by `updateBy` ,
+                kg_bloc_staff.update_time `updateTime` ,
+                kg_bloc_staff.del_flag `delFlag`
+            ,                     sys_user.user_id `userId`,
+                    sys_user.dept_id `deptId`,
+                    sys_user.user_name `userName`,
+                    sys_user.nick_name `nickName`,
+                    sys_user.user_type `userType`,
+                    sys_user.association_type `associationType`,
+                    sys_user.association_id `associationId`,
+                    sys_user.email `email`,
+                    sys_user.phonenumber `phonenumber`,
+                    sys_user.sex `sex`,
+                    sys_user.avatar `avatar`,
+                    sys_user.password `password`,
+                    sys_user.status `status`,
+                    sys_user.del_flag `delFlag`,
+                    sys_user.login_ip `loginIp`,
+                    sys_user.login_date `loginDate`,
+                    sys_user.create_by `createBy`,
+                    sys_user.create_time `createTime`,
+                    sys_user.update_by `updateBy`,
+                    sys_user.update_time `updateTime`,
+                    sys_user.remark `remark`
+
+    </sql>
+
+    <sql id="selectJoin">
+        select <include refid="joinColumn"></include> from kg_bloc_staff
+        left join sys_user on kg_bloc_staff.uid = sys_user.user_id
+        where kg_bloc_staff.del_flag = 0
+    </sql>
+
+    <select id="getDetailsById" resultType="BlocStaffDetailsBO">
+        <include refid="selectJoin"/> and kg_bloc_staff.id = #{staffId} AND kg_bloc_staff.identity = 1
+    </select>
+
+    <resultMap id="blocStaffBOResultMap" type="BlocStaffBO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"></result>
+        <result column="phone" property="phone"></result>
+        <result column="hiredate" property="hiredate"></result>
+        <result column="education" property="education"></result>
+        <result column="staff_number" property="staffNumber"></result>
+        <result column="sex" property="sex"></result>
+        <result column="quit_date" property="quitDate"></result>
+        <collection property="posts" column="post_name" ofType="string"></collection>
+    </resultMap>
+
+    <select id="detailsListPage" resultMap="blocStaffBOResultMap">
+        SELECT
+            sri.role_names,
+            staff.id,
+            staff.NAME,
+            staff.phone,
+            staff.education,
+            staff.staff_number,
+            staff.hiredate,
+            staff.quit_date,
+            staff.sex,
+            staff.education
+        FROM
+            kg_bloc_staff staff
+            LEFT JOIN (
+                SELECT
+                    GROUP_CONCAT( sr.role_name ) role_names,
+                    sur.user_id,
+                    sr.STATUS
+                FROM
+                    sys_user_role sur
+                LEFT JOIN sys_role sr ON sur.role_id = sr.role_id
+                GROUP BY
+                    sur.user_id
+            ) sri ON staff.uid = sri.user_id
+        WHERE
+            staff.del_flag = 0
+            AND sri.STATUS = '0'
+            AND staff.identity = 1
+            AND staff.bloc_id = #{queryVO.blocId}
+            AND staff.is_quit = #{queryVO.isQuit}
+            <if test="queryVO.name != null and queryVO.name.trim() != ''">
+                AND `name` LIKE concat('%', #{queryVO.name}, '%')
+            </if>
+        ORDER BY
+            staff.create_time DESC
+    </select>
+</mapper>

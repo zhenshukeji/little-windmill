@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.bloc.base.mapper.KindergartenMapper">
+
+
+    <select id="listPage" resultType="com.zhenshu.system.business.bloc.base.domain.bo.KindergartenBO">
+        SELECT
+        kg.id,
+        kg.kindergarten_name,
+        kg.principal_name,
+        kg.principal_phone,
+        kg.kindergarten_address,
+        kg.student_count,
+        kg.staff_count,
+        USER.nick_name creator,
+        kg.remark
+        FROM
+        kg_kindergarten kg
+        LEFT JOIN sys_user USER ON kg.create_by = USER.user_id
+        WHERE
+        kg.del_flag = 0
+        AND kg.bloc_id = #{queryVO.blocId}
+        <if test="queryVO.kindergartenName != null and queryVO.kindergartenName.trim() != ''">
+            AND kg.kindergarten_name LIKE concat('%', #{queryVO.kindergartenName}, '%')
+        </if>
+        ORDER BY kg.create_time DESC
+    </select>
+    <select id="getKgNameAndBlocName" resultType="com.zhenshu.system.business.bloc.base.domain.bo.NameInfoBO">
+        select kk.kindergarten_name `kgName`,
+               kb.bloc_name         `blocName`
+        from kg_kindergarten kk
+                 left join kg_bloc kb on kk.bloc_id = kb.id
+        where kk.id = #{kgId}
+    </select>
+    <select id="getUid" resultType="PostRoleNameBO">
+        select su.user_id 'id',ifnull(null,'园长') 'postName'
+        from kg_kindergarten kk
+            join sys_user su
+        where kk.principal_phone = su.phonenumber
+        and kk.id = #{kgId} and kk.del_flag = 0 and su.status = 0 and su.del_flag = 0
+    </select>
+    <select id="getIds" resultType="java.lang.Long">
+        select su.user_id 'id'
+        from kg_kindergarten kk
+                 join sys_user su
+        where kk.principal_phone = su.phonenumber
+          and kk.id in (
+              <foreach collection="kgIds" item="kgId" separator=",">
+                  #{kgId}
+              </foreach>
+            )
+          and kk.del_flag = 0 and su.status = 0 and su.del_flag = 0
+    </select>
+</mapper>
