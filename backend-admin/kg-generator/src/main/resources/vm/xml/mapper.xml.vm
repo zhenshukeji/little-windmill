@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packageName}.mapper.${ClassName}Mapper">
+#if(($table.hasDetails || $table.hasList) && $table.sub)
+    <sql id="joinColumn">
+        ${tableName}.kg_id `kgId`,
+        #foreach($column in $columns)
+            #if($column.isList == 1)
+                ${tableName}.${column.columnName} `${column.javaField}` #if($foreach.count != $columns.size()),#end
+            #end
+        #end
+        #if($subTable)
+            , #foreach($column in $subColumns)
+                  #if($column.isList == 1)
+                    ${subTableName}.$column.columnName `${column.javaField}`#if($foreach.count != $subTable.columns.size()),#end
+                  #end
+                #end
+        #end
+        #if($subTableTwo)
+            , #foreach($column in $subColumnsTwo)
+                #if($column.isList == 1)
+                    ${subTableNameTwo}.$column.columnName `${column.javaField}`#if($foreach.count != $subTableTwo.columns.size()),#end
+                #end
+                #end
+        #end
+    </sql>
+#end
+
+#if(($table.hasDetails || $table.hasList) && $table.sub)
+    <sql id="selectJoin">
+        select <include refid="joinColumn"/> from ${tableName}
+        #if($subTable)
+            left join ${subTable.tableName} on ${tableName}.${subTableFkName} = ${subTableName}.${subTable.pkColumn.columnName}
+        #end
+        #if($subTableTwo)
+            left join ${subTableTwo.tableName} on ${tableName}.${subTableFkNameTwo} = ${subTableNameTwo}.${subTableTwo.pkColumn.columnName}
+        #end
+        where ${tableName}.del_flag = 0
+    </sql>
+#end
+
+#if($table.hasList)
+#if($table.sub)
+    <select id="detailsListPage" resultType="${className}BO">
+        <include refid="selectJoin"></include>
+        #foreach($column in $columns)
+            #set($queryType=$column.queryType)
+            #set($javaField=$column.javaField)
+            #set($javaType=$column.javaType)
+            #set($columnName=$column.columnName)
+            #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+            #if($column.isQuery == 1)
+                #if($column.queryType == "EQ")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName = #{queryVO.${javaField}}</if>
+                #elseif($queryType == "NE")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName != #{queryVO.${javaField}}</if>
+                #elseif($queryType == "GT")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName &gt; #{queryVO.${javaField}}</if>
+                #elseif($queryType == "GTE")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName &gt;= #{queryVO.${javaField}}</if>
+                #elseif($queryType == "LT")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName &lt; #{queryVO.$javaField}</if>
+                #elseif($queryType == "LTE")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName &lt;= #{queryVO.$javaField}</if>
+                #elseif($queryType == "LIKE")
+                    <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${tableName}.$columnName like concat('%', #{queryVO.$javaField}, '%')</if>
+                #elseif($queryType == "BETWEEN")
+                    <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and ${tableName}.$columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
+                #end
+            #end
+        #end
+        #if($subTable)
+            #foreach($column in $table.subColumns)
+                #set($queryType=$column.queryType)
+                #set($javaField=$column.javaField)
+                #set($javaType=$column.javaType)
+                #set($columnName=$column.columnName)
+                #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+                #if($column.isQuery == 1)
+                    #if($column.queryType == "EQ")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName = #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "NE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName != #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "GT")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName &gt; #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "GTE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName &gt;= #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "LT")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName &lt; #{queryVO.$javaField}</if>
+                    #elseif($queryType == "LTE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName &lt;= #{queryVO.$javaField}</if>
+                    #elseif($queryType == "LIKE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableName}.$columnName like concat('%', #{queryVO.$javaField}, '%')</if>
+                    #elseif($queryType == "BETWEEN")
+                        <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and ${subTableName}.$columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
+                    #end
+                #end
+            #end
+        #end
+        #if($subTableTwo)
+            #foreach($column in $table.subColumnsTwo)
+                #set($queryType=$column.queryType)
+                #set($javaField=$column.javaField)
+                #set($javaType=$column.javaType)
+                #set($columnName=$column.columnName)
+                #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+                #if($column.isQuery == 1)
+                    #if($column.queryType == "EQ")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName = #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "NE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName != #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "GT")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName &gt; #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "GTE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName &gt;= #{queryVO.${javaField}}</if>
+                    #elseif($queryType == "LT")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName &lt; #{queryVO.$javaField}</if>
+                    #elseif($queryType == "LTE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName &lt;= #{queryVO.$javaField}</if>
+                    #elseif($queryType == "LIKE")
+                        <if test="queryVO.$javaField != null #if($javaType == 'String' ) and queryVO.$javaField.trim() != ''#end"> and ${subTableNameTwo}.$columnName like concat('%', #{queryVO.$javaField}, '%')</if>
+                    #elseif($queryType == "BETWEEN")
+                        <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and ${subTableNameTwo}.$columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
+                    #end
+                #end
+            #end
+        #end
+        and ${tableName}.kg_id = #{queryVO.kgId}
+        ORDER BY ${tableName}.create_time DESC
+    </select>
+#end
+#end
+
+#if($table.hasDetails && $table.sub)
+    <select id="getDetailsById" resultType="${className}DetailsBO">
+        <include refid="selectJoin"/> and ${tableName}.${pkColumn.columnName} = #{${pkColumn.javaField}}
+    </select>
+#end
+</mapper>

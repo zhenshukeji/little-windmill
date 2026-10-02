@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.parent.app.mapper.StudentMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, student_no, bloc_id, kg_id, class_id, name, gender, openid, img_url, real_img_url, nation, blood_type, birthdate, health_status, card_type, card_number, nationality, studying_way, enroll_date, place_of_birth, native_place, account_quality, account_type, account_address, address, is_weak, is_only_child, is_left, is_orphan, is_disability, is_workers, special_case, is_leave_school, create_by, create_time, update_by, update_time, del_flag
+    </sql>
+    <select id="getByIdsAndNotLeave" resultType="com.zhenshu.parent.app.domain.bo.StudentBO">
+        SELECT
+            ks.id `studentId`,
+            ks.`name` `studentName`,
+            ks.`class_id` `classId`,
+            ks.birthdate `birthdate`,
+            ks.kg_id 'kgId',
+            ks.bloc_id 'blocId'
+        FROM
+            kg_student ks
+        WHERE ks.del_flag = 0 and ks.id in
+            <foreach collection="studentIds" item="studentId" open="(" separator="," close=")">
+                #{studentId}
+            </foreach>
+            and ks.is_leave_school = 0
+
+    </select>
+    <select id="checkingStudentData" resultType="com.zhenshu.parent.app.domain.bo.checking.CheckingStudentDataBO">
+        select
+               name 'studentName',
+               img_url 'imgUrl',
+                (select
+                        kindergarten_name
+                from kg_kindergarten
+                where id = ${studentBO.kgId} and del_flag = 0) 'kindergartenName',
+                (select
+                        class_name
+                from kg_classroom
+                where id = ${studentBO.classId} and del_flag = 0) 'className'
+        from kg_student where id = ${studentBO.studentId} and del_flag = 0 and is_leave_school = 0 and kg_id = ${studentBO.kgId}
+    </select>
+
+</mapper>

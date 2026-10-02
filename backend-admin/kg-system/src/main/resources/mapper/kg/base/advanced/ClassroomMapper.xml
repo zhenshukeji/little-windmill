@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.kg.base.advanced.mapper.ClassroomMapper">
+    <sql id="joinColumn">
+        kg_classroom.id id,
+        kg_classroom.kg_id `kgId`,
+        kg_classroom.class_name `className` ,
+        kg_classroom.grade_id `gradeId` ,
+        kg_classroom.teacher_id `teacherId` ,
+        kg_classroom.sub_teacher_id `subTeacherId` ,
+        kg_kindergarten_staff.name `teacherName`,
+        kg_grade.grade_name `gradeName`
+    </sql>
+
+    <sql id="selectJoin">
+        select
+        <include refid="joinColumn"/>
+        from kg_classroom
+        left join kg_kindergarten_staff on kg_classroom.teacher_id = kg_kindergarten_staff.id
+        left join kg_grade on kg_classroom.grade_id = kg_grade.id
+        where kg_classroom.del_flag = 0
+    </sql>
+
+    <select id="detailsListPage" resultType="ClassroomBO">
+        SELECT
+            kc.id,
+            kc.class_name,
+            kc.grade_id,
+            kg.grade_name,
+            kks.id `teacher_id`,
+            kks.NAME `teacher_name`,
+            kks2.id `sub_teacher_id`,
+            kks2.NAME `sub_teacher_name`
+        FROM
+            kg_classroom kc
+                LEFT JOIN kg_grade kg ON kc.grade_id = kg.id
+                LEFT JOIN kg_kindergarten_staff kks ON kc.teacher_id = kks.id
+                LEFT JOIN kg_kindergarten_staff kks2 ON kc.sub_teacher_id = kks2.id
+        WHERE
+            kc.kg_id = #{queryVO.kgId}
+          AND kc.del_flag = 0
+          ORDER BY kc.create_time DESC
+    </select>
+
+    <select id="getDetailsById" resultType="com.zhenshu.system.business.kg.base.advanced.domain.bo.ClassroomDetailsBO">
+        <include refid="selectJoin"/>
+        and kg_classroom.id = #{id}
+    </select>
+
+    <select id="getByKgId" resultType="com.zhenshu.system.business.kg.base.advanced.domain.bo.ClassroomBO">
+        select kc.id          `id`,
+               kc.kg_id       `kgId`,
+               class_name     `className`,
+               grade_id       `gradeId`,
+               teacher_id     `teacherId`,
+               sub_teacher_id `subTeacherId`,
+               kg.grade_name  `gradeName`
+        from kg_classroom kc
+                 left join kg_grade kg on kc.grade_id = kg.id
+        where kc.del_flag = 0
+          and kc.kg_id = #{kgId}
+    </select>
+    <select id="getClassroomAllByKgId" resultType="ClassroomSimpleBO">
+        SELECT
+            kc.id,
+            kc.class_name,
+            kc.student_count,
+            kks.`name` teacherName
+        FROM
+            kg_classroom kc
+            LEFT JOIN kg_kindergarten_staff kks ON kc.teacher_id = kks.id
+        WHERE
+            kc.kg_id = #{kgId}
+            AND kc.del_flag = 0
+        ORDER BY
+            kc.create_time DESC
+    </select>
+
+    <select id="getPromotionList" resultType="ClassroomSimpleBO">
+        SELECT
+            kc.id,
+            kc.class_name,
+            kc.student_count,
+            kks.`name` teacherName
+        FROM
+            kg_classroom kc
+            LEFT JOIN kg_kindergarten_staff kks ON kc.teacher_id = kks.id
+        WHERE
+            kc.del_flag = FALSE
+            AND kc.kg_id = #{kgId}
+            AND kc.student_count > 0
+        ORDER BY
+            kc.create_time DESC
+    </select>
+    <select id="getClassroomSimpleById" resultType="ClassroomSimpleBO">
+        SELECT
+            kc.id,
+            kc.class_name,
+            kc.student_count,
+            kks.`name` teacherName
+        FROM
+            kg_classroom kc
+            LEFT JOIN kg_kindergarten_staff kks ON kc.teacher_id = kks.id
+        WHERE
+            kc.id = #{classId}
+    </select>
+</mapper>

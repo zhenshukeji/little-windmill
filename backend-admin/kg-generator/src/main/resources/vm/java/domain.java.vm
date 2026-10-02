@@ -1,0 +1,41 @@
+package ${packageName}.domain.po;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.zhenshu.common.domain.BasePO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc ${table.tableComment}实体
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("${table.tableName}")
+public class ${ClassName} extends BasePO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+    #if(!$table.isSuperColumn($column.javaField) && !$column.fixed)
+    /**
+     * $column.columnComment
+     */
+    #if($column.isPk == 1)
+    @TableId(type = IdType.AUTO)
+    #end
+    private $column.javaType $column.javaField;
+
+    #end
+#end
+}

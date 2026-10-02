@@ -1,0 +1,86 @@
+# 服务器
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8184
+# 数据库配置
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://${DB_HOST:127.0.0.1}:3313/kindergarten?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: kindergarten
+      password: ${DB_PASSWORD:}
+  # cache 配置
+  redis:
+    # 地址
+    host: ${DB_HOST:127.0.0.1}
+    # 端口，默认为6379
+    port: 5268
+    # 密码
+    password: ${REDIS_PASSWORD:}
+    # 数据库
+    database: 10
+    cache_name: kg-parent
+
+app-config:
+  # 用户名
+  user:
+    username: admin
+    password: ${APP_USER_PASSWORD:}
+
+# 日志文件收集
+sentry:
+  dsn: ${SENTRY_DSN:}
+  enable: false
+
+# 文档配置
+knife4j:
+  # 是否开启 Knife4j 增强模式
+  enable: true
+  # 是否开启生产环境保护策略
+  production: false
+swagger:
+  # 用来控制配置类是否生效
+  enabled: true
+
+wx-mp:
+  # 珍数appId: wxd95f328551915796
+  appId: wxd95f328551915796
+  # 拓展属性: service为TUZHAN时会被拼接在codeUrl中; service为ZHENSHU时没什么用
+  expand: two
+  # 使用的服务, 枚举类: com.zhenshu.parent.common.wx.WxMpEnum
+  service: ZHENSHU
+
+# 微信小程序配置
+wx-mini:
+  # 商户id
+  mch-id: ${WX_MCH_ID:}
+  # 商户key
+  mch-key: ${WX_MCH_KEY:}
+  # 商户证书文件路径
+  # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
+  key-path: classpath:mp/haibei/apiclient_cert.p12
+  # 小程序appid
+  app-id: ${WX_APP_ID:your-app-id}
+  # 小程序秘钥
+  app-secret: ${WX_APP_SECRET:${WX_APP_SECRET:your-app-secret}}
+  # 接口地址前缀
+  requestAddressPrefix: https://${API_BASE_URL:http://localhost:8184}/api/dev/kgParent/
+  # 微信支付回调地址
+  notify-url: ${wx-mini.requestAddressPrefix}/wx/order/pay-callback
+
+# 阿里云短信
+aliyun-sms:
+  regionId: cn-hangzhou
+  accessKeyId: ${ALIYUN_SMS_ACCESS_KEY_ID:}
+  accessKeySecret: ${ALIYUN_SMS_ACCESS_KEY_SECRET:}
+  sign: 珍数科技
+  templateId: SMS_141205397
+
+kg-parent-config:
+  # 接口地址
+  base-api-url: https://${API_BASE_URL:http://localhost:8184}/api/dev/KgParent
+  order-config:
+    # 支付描述
+    pay-desc: 缴费
+    # 支付回调地址
+    pay-notify-url: ${kg-parent-config.base-api-url}/wx/payment/callback

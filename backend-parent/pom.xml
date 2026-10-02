@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>groupId</groupId>
+    <artifactId>kgParent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>kgParent</name>
+    <description>幼儿园家长端小程序</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <properties>
+        <skipTests>true</skipTests> <!-- 打包的时候跳过单元测试 -->
+        <java.version>1.8</java.version>
+        <fasterxml.version>2.10.2</fasterxml.version>
+        <spring.version>2.3.4.RELEASE</spring.version>
+        <lombok.version>1.18.16</lombok.version>
+        <commons.io.version>2.5</commons.io.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mybatis.spring.boot.starter.version>2.1.1</mybatis.spring.boot.starter.version>
+        <commons.fileupload.version>1.3.3</commons.fileupload.version>
+        <aliyun-oss.version>2.5.0</aliyun-oss.version>
+        <aliyun-sdk.version>4.1.1</aliyun-sdk.version>
+        <qcloud.version>5.6.8</qcloud.version>
+        <bcprov.version>1.59</bcprov.version>
+        <httpmime.version>4.5.2</httpmime.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <aliyun-sdk-geoip.version>1.0.4</aliyun-sdk-geoip.version>
+        <druid.version>1.1.21</druid.version>
+        <poi.version>4.1.2</poi.version>
+        <pay.version>4.2.0</pay.version>
+        <pagehelper.spring.boot.starter.version>1.2.5</pagehelper.spring.boot.starter.version>
+        <sentry.version>1.7.27</sentry.version>
+        <getsentry.version>8.0.2</getsentry.version>
+        <knife4j.version>2.0.7</knife4j.version>
+        <mail.version>1.5.0-b01</mail.version>
+        <admin.version>2.2.0</admin.version>
+        <hutool-all.version>5.7.10</hutool-all.version>
+        <log4j-api.vsersion>2.16.0</log4j-api.vsersion>
+        <redisson.version>3.13.6</redisson.version>
+        <aliyun-green.version>3.6.5</aliyun-green.version>
+        <fastjson.version>1.2.79</fastjson.version>
+        <miniapp.version>4.2.0</miniapp.version>
+        <jwt.version>0.9.1</jwt.version>
+        <jedis-lock.version>1.0.0</jedis-lock.version>
+    </properties>
+
+
+    <dependencies>
+        <!--SpringBoot 启动插件-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-api</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--解决 log4j2的 漏洞 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-api.vsersion}</version>
+        </dependency>
+
+        <!-- SpringBoot Web容器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- SpringBoot 拦截器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!--SpringBoot热部署插件-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!--简化开发的jar 包-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>${lombok.version}</version>
+        </dependency>
+
+        <!--测试jar-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- 用于解析json 转 xml 中行需要-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${fasterxml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${fasterxml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${fasterxml.version}</version>
+        </dependency>
+
+        <!--io常用工具类 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
+
+        <!-- Mysql驱动包 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- SpringBoot集成mybatis框架 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.spring.boot.starter.version}</version>
+        </dependency>
+
+        <!--mybatis mybatis-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!--阿里数据库连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!--文件上传工具类 -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons.fileupload.version}</version>
+        </dependency>
+
+        <!--Spring框架基本的核心工具-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <!--aliyun sdk用于实现文件上传cdn -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun-oss.version}</version>
+        </dependency>
+
+        <!--阿里云短信验证码-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun-sdk.version}</version>
+        </dependency>
+
+        <!-- excel工具 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+
+        <!--常用工具类 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- cache 缓存操作 lettuce缓存有两个问题，一个是连接断开之后会采用默认配置127.0.0.1，另一个是多次超时之后不会自动重连，所以阿里云推荐采用jedis 连接池-->
+        <!-- 对应文档地址 https://help.aliyun.com/document_detail/251467.html -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>redis.clients</groupId>
+                    <artifactId>jedis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+
+        <!--腾讯云oss-->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+            <version>${qcloud.version}</version>
+        </dependency>
+
+        <!--发送https 请求需要-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpmime.version}</version>
+        </dependency>
+
+        <!--SM4算法需要-->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov.version}</version>
+        </dependency>
+
+        <!-- mybatis mybatis 需要 -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <!--JWT-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.8.2</version>
+        </dependency>
+
+        <!-- pagehelper 分页插件 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.spring.boot.starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsqlparser</artifactId>
+                    <groupId>com.github.jsqlparser</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--微信支付代码包-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>${pay.version}</version>
+        </dependency>
+
+        <!--sentry 日志收集工具-->
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring</artifactId>
+            <version>${sentry.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.getsentry.raven</groupId>
+            <artifactId>raven-logback</artifactId>
+            <version>${getsentry.version}</version>
+        </dependency>
+
+        <!--xiaoymin 版本的swagger ，在线文档工具-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
+
+        <!--发送邮件-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
+        </dependency>
+
+        <!--Spring Boot Test-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool-all.version}</version>
+        </dependency>
+
+        <!-- mybatis mybatis 自动生成代码需要的包-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!--阿里云ip地址定位-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-geoip</artifactId>
+            <version>${aliyun-sdk-geoip.version}</version>
+        </dependency>
+
+        <!-- JSR303 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- redis 分布式锁，超时时间自动续期的看门狗，包括锁的超时功能 -->
+        <!-- 教程博客：https://www.cnblogs.com/cjsblog/p/11273205.html -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-green</artifactId>
+            <version>${aliyun-green.version}</version>
+        </dependency>
+
+        <!-- 阿里JSON解析器 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!--微信小程序-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>${miniapp.version}</version>
+        </dependency>
+
+        <!-- Token生成与解析-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
+
+        <!--jredis-->
+        <dependency>
+            <groupId>com.github.jedis-lock</groupId>
+            <artifactId>jedis-lock</artifactId>
+            <version>${jedis-lock.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

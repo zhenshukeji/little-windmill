@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.kg.work.backlog.mapper.StudentVacateApplyMapper">
+    <select id="listPendingPage" resultType="com.zhenshu.system.business.kg.work.backlog.domain.bo.StudentVacateApplyBO">
+        SELECT
+            ksva.id `id`,
+            ks.`name` `studentName`,
+            kc.class_name
+        FROM
+            kg_student_vacate_apply ksva
+            LEFT JOIN kg_student ks ON ksva.student_id = ks.id
+            LEFT JOIN kg_classroom kc ON kc.id = ks.class_id
+        WHERE
+            ksva.del_flag = 0
+            AND ks.del_flag = 0
+            AND ksva.kg_id = #{queryVO.kgId}
+            AND ksva.status = 0
+            <if test="queryVO.classroomId != null">
+                AND kc.id = #{queryVO.classroomId}
+            </if>
+        ORDER BY ksva.id DESC
+    </select>
+
+    <select id="getDetailsById" resultType="com.zhenshu.system.business.kg.work.backlog.domain.bo.StudentVacateApplyDetailsBO">
+        SELECT
+            ksva.kg_id `kgId`,
+            ksva.id `id`,
+            ksva.type `vacateType`,
+            ksva.begin_time `beginTime`,
+            ksva.end_time `endTime`,
+            ksva.STATUS `status`,
+            ksva.create_time `applyTime`,
+            ks.`name` `studentName`,
+            kc.class_name,
+            ks.birthdate,
+            ksva.reason,
+            ml.phone `applyPhone`,
+            ksva.approve_by,
+            ksva.approve_time,
+            ksva.approve_opinion,
+            ksva.student_id
+        FROM
+            kg_student_vacate_apply ksva
+            LEFT JOIN kg_student ks ON ksva.student_id = ks.id
+            LEFT JOIN kg_classroom kc ON kc.id = ks.class_id
+            LEFT JOIN mini_login ml ON ksva.apply_by = ml.id
+        WHERE
+            ksva.del_flag = 0
+            AND ks.del_flag = 0
+            AND ksva.id = #{id}
+    </select>
+
+    <select id="getByStudentIdAndDate" resultType="StudentVacateApplyCheckingBO">
+        SELECT
+            student_id 'studentId',
+            type 'vacateType'
+        FROM
+            kg_student_vacate_apply ksva
+        WHERE
+            ksva.STATUS = #{queryVO.status}
+            AND ksva.del_flag = 0
+            AND ksva.kg_id = #{queryVO.kgId}
+            AND ksva.student_id IN
+            <foreach collection="queryVO.studentIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND ( DATE_FORMAT(ksva.begin_time,'%Y-%m-%d') &lt;=  #{queryVO.date} AND DATE_FORMAT(ksva.end_time,'%Y-%m-%d') &gt;=  #{queryVO.date} )
+    </select>
+    <select id="getByStudentIdAndDateRange" resultType="StudentVacateApplyCheckingBO">
+        select
+            student_id 'studentId',
+            type 'vacateType',
+            begin_time 'beginTime',
+            end_time 'endTime'
+        from kg_student_vacate_apply ksva where ksva.status = #{queryVO.status} and kg_id = #{queryVO.kgId}
+        and ksva.student_id in
+        <foreach collection="queryVO.studentIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and ( #{queryVO.minDate}&lt;=DATE_FORMAT(ksva.end_time,'%Y-%m-%d') and #{queryVO.maxDate}>=DATE_FORMAT(ksva.begin_time,'%Y-%m-%d'))
+        or(#{queryVO.minDate}>DATE_FORMAT(ksva.end_time,'%Y-%m-%d') and #{queryVO.maxDate}&lt;DATE_FORMAT(ksva.begin_time,'%Y-%m-%d'))
+    </select>
+    <select id="listHistoryPage"
+            resultType="com.zhenshu.system.business.kg.work.backlog.domain.bo.StudentVacateApplyBO">
+        SELECT
+            ksva.id `id`,
+            ksva.type `vacateType`,
+            ksva.begin_time `beginTime`,
+            ksva.end_time `endTime`,
+            ksva.STATUS `status`,
+            ks.`name` `studentName`,
+            kc.class_name,
+            ml.phone,
+            ksva.student_id
+        FROM
+            kg_student_vacate_apply ksva
+            LEFT JOIN kg_student ks ON ksva.student_id = ks.id
+            LEFT JOIN kg_classroom kc ON kc.id = ks.class_id
+            LEFT JOIN mini_login ml ON ksva.apply_by = ml.id
+        WHERE
+            ksva.del_flag = 0
+            AND ks.del_flag = 0
+            AND ksva.kg_id = #{queryVO.kgId}
+            AND ksva.status != 0
+            <if test="queryVO.classroomId != null">
+                AND kc.id = #{queryVO.classroomId}
+            </if>
+            <if test="queryVO.studentName != null and queryVO.studentName.trim() != ''">
+                AND ks.`name` LIKE CONCAT('%', #{queryVO.studentName}, '%')
+            </if>
+        ORDER BY ksva.id DESC
+    </select>
+    <select id="getHomePendingTopByKgId" resultType="KgHomePendingItemBO">
+        SELECT
+            ksva.id,
+            ksva.apply_time,
+            ks.`name` `applyName`,
+            kc.class_name,
+            '申请休假' 'describe'
+        FROM
+            kg_student_vacate_apply ksva
+            LEFT JOIN kg_student ks ON ksva.student_id = ks.id
+            LEFT JOIN kg_classroom kc ON ks.class_id = kc.id
+        WHERE
+            ksva.kg_id = #{kgId}
+            AND ksva.`status` = 0
+        ORDER BY
+            ksva.id DESC
+    </select>
+    <select id="getStudentVacateApplyByIds" resultType="StudentVacateApplyReportBO">
+        select student_id,begin_time,end_time
+        from kg_student_vacate_apply
+        where status = #{queryVO.status}
+        and kg_id = #{queryVO.kgId}
+        and student_id in (
+            <foreach collection="queryVO.studentIds" item="studentId" separator=",">
+                #{studentId}
+            </foreach>
+            )
+        and del_flag = 0
+        and ( #{queryVO.first}&lt;=DATE_FORMAT(end_time,'%Y-%m-%d') and #{queryVO.last}>=DATE_FORMAT(begin_time,'%Y-%m-%d'))
+        or(#{queryVO.first}>DATE_FORMAT(end_time,'%Y-%m-%d') and #{queryVO.last}&lt;DATE_FORMAT(begin_time,'%Y-%m-%d'))
+    </select>
+    <select id="getConsentByStudentIdAndDateRange"
+            resultType="com.zhenshu.system.business.kg.work.backlog.domain.po.StudentVacateApply">
+        SELECT
+            id,
+            bloc_id,
+            kg_id,
+            student_id,
+            type,
+            begin_time,
+            end_time,
+            reason,
+            approve_by,
+            approve_time,
+            approve_opinion,
+            `STATUS`,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            del_flag
+        FROM
+            kg_student_vacate_apply
+        WHERE
+            DATE_FORMAT( begin_time, '%Y-%m-%d' ) &lt;= #{beginDate}
+            AND DATE_FORMAT( end_time, '%Y-%m-%d' ) &gt;= #{endDate}
+            AND `status` = 1
+            AND student_id IN (
+            <foreach collection="studentIds" item="studentId" separator=",">
+                #{studentId}
+            </foreach>
+            )
+    </select>
+    <select id="getConsentByKgIdAndDate"
+            resultType="com.zhenshu.system.business.kg.work.backlog.domain.po.StudentVacateApply">
+        SELECT
+            apply_by,
+            apply_time,
+            approve_by,
+            approve_opinion,
+            approve_time,
+            begin_time,
+            bloc_id,
+            class_id,
+            create_by,
+            create_time,
+            del_flag,
+            end_time,
+            id,
+            kg_id,
+            reason,
+            STATUS,
+            student_id,
+            type,
+            update_by,
+            update_time
+        FROM
+            kg_student_vacate_apply ksva
+        WHERE
+            ksva.del_flag = 0
+            AND ksva.kg_id = #{kgId}
+            AND (DATE_FORMAT( ksva.begin_time, '%Y-%m-%d' ) &lt;= #{date} AND DATE_FORMAT( ksva.end_time, '%Y-%m-%d' ) &gt;= #{date} )
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+/* 公共样式变量 —— 风车智慧幼教视觉规格（2026-09-22 改版）
+   规格来源：docs/风车智慧幼教_改造实施方案.md §4
+   注意：$theme-color / $color1..$color8 / $f24..$f36 为既有页面在用的变量名，
+   保持名称不变，仅按新规格收敛取值，避免页面批量改名。 */
+
+// 主题颜色
+$theme-color:#27846F;      // 主色：主按钮、选中态、关键链接
+$theme-light:#E0EEE4;      // 淡绿：首页横幅、个人信息卡
+$theme-lighter:#EDF5EF;    // 浅绿：轻按钮背景
+$theme-amber:#EDC76B;      // 杏黄：少量装饰，不用作白底正文
+
+// 页面 / 卡片
+$page-bg:#F6F7F2;          // 页面底色
+$card-bg:#FFFFFF;          // 卡片底色
+$line-color:#EDF0E9;       // 边线，1rpx，优先留白而非重阴影
+
+// 字体颜色
+$color1:#293D36;           // 正文（原 #3A3A3A，按规格统一）
+$color2:#FFFFFF;
+$color3:#000000;
+$color4:#BEBEBE;
+$color5:#DEDEDE;
+$color6:#65766C;           // 次要说明（原 #7F7F7F，按规格统一）
+$color7:#CFCFCF;
+$color8:#EDC76B;           // 杏黄（§4，仅装饰用，不做白底正文）
+
+// 状态语义色（对应实施方案 §4「状态」一行，与 common.css 的 .status0/.status1/.status2/.status3 一致）
+$status-done:#27846F;      // 已同意 / 到园
+$status-reject:#B3403F;    // 拒绝
+$status-back:#CFCFCF;      // 撤回 / 缺勤
+$status-pending:#B78A32;   // 待处理 / 请假
+
+// 语义别名，便于新页面直接引用
+$text-main:$color1;
+$text-sub:$color6;
+
+// 圆角
+$radius-card:32rpx;        // 卡片 28–32rpx
+$radius-btn:22rpx;         // 按钮 20–24rpx
+$radius-tag:12rpx;         // 标签 10–12rpx
+
+// 间距
+$gutter:32rpx;             // 左右外边距
+$card-padding:28rpx;       // 卡片内边距 28–32rpx
+$btn-height:88rpx;         // 主按钮触控高度
+
+// 字体大小
+$f24:24rpx;
+$f26:26rpx;
+$f28:28rpx;
+$f30:30rpx;
+$f36:36rpx;

@@ -1,0 +1,48 @@
+package ${packageName}.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${packageName}.domain.po.${ClassName};
+#if($table.hasDetails)
+import ${packageName}.domain.bo.${ClassName}DetailsBO;
+#end
+#if($table.hasList || $table.hasDetails)
+import ${packageName}.domain.bo.${ClassName}BO;
+#end
+#if($table.hasList)
+import ${packageName}.domain.vo.${ClassName}QueryVO;
+#end
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc ${functionName}Mapper接口
+ */
+public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
+#if($table.sub)
+#if($table.hasList)
+    /**
+     * 列表查询
+     *
+     * @param page            分页对象
+     * @param queryVO 入参VO
+     * @return 结果
+     */
+    List<${ClassName}BO> detailsListPage(@Param("page") IPage<${ClassName}BO> page, @Param("queryVO") ${ClassName}QueryVO queryVO);
+#end
+
+#if($table.hasDetails)
+    /**
+     * 根据Id查询
+     *
+     * @param id id
+     * @return 结果
+     */
+    ${ClassName}DetailsBO getDetailsById(Long id);
+#end
+#end
+}

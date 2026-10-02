@@ -1,0 +1,55 @@
+# 风车智慧幼教 社区版部署模板（v1）
+# 注意：本模板在无 Docker 的开发机上编写，**未经 docker compose 实测**（见进度记录 ce-11 未验项）。
+# 结构：mysql + redis + backend-admin(8179) + backend-parent(8184) + admin-web(nginx:80)
+# 数据库初始化：database/schema.sql + database/seed.sql（首次启动自动导入，见 db 服务 volumes）
+version: "3.8"
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?请在 .env 中设置}
+      MYSQL_DATABASE: kindergarten
+    volumes:
+      - db-data:/var/lib/mysql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    ports:
+      - "127.0.0.1:3306:3306"
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?请在 .env 中设置}"]
+    ports:
+      - "127.0.0.1:6379:6379"
+  backend-admin:
+    build: ../backend-admin
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+    depends_on: [db, redis]
+    ports:
+      - "127.0.0.1:8179:8179"
+  backend-parent:
+    build: ../backend-parent
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+      WX_APP_SECRET: ${WX_APP_SECRET}
+      ALIYUN_SMS_ACCESS_KEY_ID: ${ALIYUN_SMS_ACCESS_KEY_ID}
+      ALIYUN_SMS_ACCESS_KEY_SECRET: ${ALIYUN_SMS_ACCESS_KEY_SECRET}
+      UPLOAD_PATH: /data/files
+    volumes:
+      - file-data:/data/files
+    depends_on: [db, redis]
+    ports:
+      - "127.0.0.1:8184:8184"
+  admin-web:
+    image: nginx:alpine
+    volumes:
+      - ../admin-web/dist:/usr/share/nginx/html:ro
+    ports:
+      - "127.0.0.1:8080:80"
+volumes:
+  db-data:
+  file-data:

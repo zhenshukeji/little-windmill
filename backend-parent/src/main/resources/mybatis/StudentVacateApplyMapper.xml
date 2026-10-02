@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.parent.app.mapper.StudentVacateApplyMapper">
+    <select id="getDetailsById" resultType="com.zhenshu.parent.app.domain.bo.apply.VacateApplyDetailsBO">
+        SELECT
+            ksva.id,
+            ksva.`type` 'vacateType',
+            ksva.begin_time,
+            ksva.end_time,
+            ksva.`status`,
+            su.nick_name `approveName`,
+            su.avatar `approveByHead`,
+            ksva.approve_time,
+            ksva.approve_opinion,
+            ksva.student_id,
+            ksva.`reason` 'vacateReason'
+        FROM
+            kg_student_vacate_apply ksva
+            LEFT JOIN sys_user su ON ksva.approve_by = su.user_id
+        WHERE
+            ksva.del_flag = FALSE
+            AND ksva.id = #{vacateApplyId}
+    </select>
+</mapper>

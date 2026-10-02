@@ -1,0 +1,34 @@
+package ${packageName}.domain.vo;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc ${table.tableComment}删除入参
+ */
+@Data
+@ApiModel(description = "${table.tableComment}删除入参")
+public class ${ClassName}DeleteVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    #set($column=$pkColumn)
+    /**
+     * $column.columnComment
+     */
+    @NotNull
+    @ApiModelProperty(required = true, value = "$column.columnComment")
+    private $column.javaType $column.javaField;
+}

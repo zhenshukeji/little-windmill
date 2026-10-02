@@ -1,0 +1,96 @@
+package ${packageName}.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import ${packageName}.domain.po.${ClassName};
+    #if($table.hasDetails)
+import ${packageName}.domain.bo.${ClassName}DetailsBO;
+    #end
+    #if($table.hasList)
+import ${packageName}.domain.vo.${ClassName}QueryVO;
+    #end
+    #if($table.hasUpdate)
+import ${packageName}.domain.vo.${ClassName}EditVO;
+    #end
+    #if($table.hasInsert)
+import ${packageName}.domain.vo.${ClassName}AddVO;
+    #end
+    #if($table.hasDelete)
+import ${packageName}.domain.vo.${ClassName}DeleteVO;
+    #end
+import ${packageName}.domain.bo.${ClassName}BO;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc service
+ */
+public interface I${ClassName}Service extends IService<${ClassName}> {
+#if($table.hasList)
+    /**
+     * 列表查询
+     *
+     * @param queryVO 列表查询入参
+     * @return 结果
+     */
+    IPage<${ClassName}BO> listPage(${ClassName}QueryVO queryVO);
+#end
+
+#if($table.hasUpdate)
+    /**
+     * 根据Id修改
+     *
+     * @param editVO 修改入参
+     */
+    void updateById(${ClassName}EditVO editVO);
+#end
+
+#if($table.hasInsert)
+    /**
+     * 添加
+     *
+     * @param addVO 添加入参
+     */
+    void insert(${ClassName}AddVO addVO);
+#end
+
+#if($table.hasDelete)
+    /**
+     * 根据id删除
+     *
+     * @param deleteVO 删除入参
+     */
+    void deleteById(${ClassName}DeleteVO deleteVO);
+#end
+
+#if($table.hasDetails)
+    /**
+     * 根据Id查询
+     *
+     * @param id id
+     * @return 结果
+     */
+    ${ClassName}DetailsBO getDetailsById(Long id);
+#end
+
+#if($table.hasExport)
+    /**
+     * 条件查询
+     *
+     * @param queryVO 入参VO
+     * @return 结果
+     */
+    List<${ClassName}BO> queryList(${ClassName}QueryVO queryVO);
+#end
+
+    /**
+     * 获取并校验当前用户是否能查看和操作id对应的数据
+     *
+     * @param id id
+     * @return 结果
+     */
+    ${ClassName} getAndVerify${ClassName} (Long id);
+}

@@ -1,0 +1,256 @@
+package ${packageName}.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhenshu.common.constant.Constants;
+import com.zhenshu.common.constant.ErrorEnums;
+import com.zhenshu.common.core.domain.entity.SysUser;
+import com.zhenshu.common.core.domain.model.LoginUser;
+import com.zhenshu.common.exception.ServiceException;
+import com.zhenshu.common.utils.SecurityUtils;
+import com.zhenshu.common.utils.StringUtils;
+import com.zhenshu.common.utils.bean.BeanUtils;
+import ${packageName}.domain.po.${ClassName};
+    #if($table.hasDetails)
+import ${packageName}.domain.bo.${ClassName}DetailsBO;
+    #end
+    #if($table.hasList)
+import ${packageName}.domain.vo.${ClassName}QueryVO;
+    #end
+    #if($table.hasUpdate)
+import ${packageName}.domain.vo.${ClassName}EditVO;
+    #end
+    #if($table.hasInsert)
+import ${packageName}.domain.vo.${ClassName}AddVO;
+    #end
+    #if($table.hasDelete)
+import ${packageName}.domain.vo.${ClassName}DeleteVO;
+    #end
+import ${packageName}.domain.bo.${ClassName}BO;
+import ${packageName}.mapper.${ClassName}Mapper;
+import ${packageName}.service.I${ClassName}Service;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc serviceImpl
+ */
+@Service
+public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${ClassName}> implements I${ClassName}Service {
+#if($table.hasList)
+#if(!$table.sub)
+    /**
+     * 列表查询
+     *
+     * @param queryVO 列表查询入参
+     * @return 结果
+     */
+    @Override
+    public IPage<${ClassName}BO> listPage(${ClassName}QueryVO queryVO) {
+        IPage<${ClassName}> page = queryVO.page();
+        QueryWrapper<${ClassName}> queryWrapper = new QueryWrapper<>();
+        ${ClassName} data = new ${ClassName}();
+        BeanUtils.copyBeanProp(data, queryVO);
+        queryWrapper.setEntity(data);
+        queryWrapper.lambda().orderByDesc(${ClassName}::getCreateTime);
+        #foreach($column in $vueColumns)
+            #if($column.isQuery == 1 && $column.queryType == "LIKE")
+        if(StringUtils.isNotEmpty(queryVO.${column.method()}())){
+            queryWrapper.lambda().like(${ClassName}::${column.method()}, queryVO.${column.method()}());
+        }
+            #end
+        #end
+        page = this.page(page, queryWrapper);
+        return page.convert(item -> {
+            ${ClassName}BO bo = new ${ClassName}BO();
+            BeanUtils.copyBeanProp(bo, item);
+            return bo;
+        });
+    }
+#else
+    /**
+     * 主次列表查询
+     *
+     * @param queryVO 列表查询入参
+     * @return 结果
+     */
+    @Override
+    public IPage<${ClassName}BO> listPage(${ClassName}QueryVO queryVO) {
+        IPage<${ClassName}BO> page = new Page<>(queryVO.getPageNum(), queryVO.getPageSize());
+        List<${ClassName}BO> list =  baseMapper.detailsListPage(page, queryVO);
+        page.setRecords(list);
+        return page;
+    }
+#end
+#end
+
+#if($table.hasUpdate)
+    /**
+     * 根据Id修改
+     *
+     * @param editVO 修改入参
+     */
+    @Override
+    public void updateById(${ClassName}EditVO editVO) {
+        // 1.获取并校验id对应的数据
+        ${ClassName} data = this.getAndVerify${ClassName}(editVO.getId());
+        // 2.根据id修改
+        ${ClassName} update = new ${ClassName}();
+        update.initUpdateProp();
+        BeanUtils.copyBeanProp(update, editVO);
+        super.update(update,
+                new UpdateWrapper<${ClassName}>().lambda()
+                        .eq(${ClassName}::$pkColumn.method(), editVO.$pkColumn.method()())
+        );
+    }
+#end
+
+#if($table.hasInsert)
+    /**
+     * 添加
+     *
+     * @param addVO 添加入参
+     */
+    @Override
+    public void insert(${ClassName}AddVO addVO) {
+        SysUser login = SecurityUtils.getUser();
+        ${ClassName} data = new ${ClassName}();
+        data.initCreateProp();
+        BeanUtils.copyBeanProp(data, addVO);
+        data.setKgId(login.getKgId());
+        data.setBlocId(login.getBlocId());
+        this.save(data);
+    }
+#end
+
+#if($table.hasDelete)
+    /**
+     * 删除
+     *
+     * @param deleteVO 删除入参
+     */
+    @Override
+    public void deleteById(${ClassName}DeleteVO deleteVO) {
+        // 1.校验id对应的数据
+        this.getAndVerify${ClassName}(deleteVO.getId());
+        // 2.逻辑删除
+        ${ClassName} update = new ${ClassName}();
+        update.initUpdateProp();
+        super.update(update,
+                new UpdateWrapper<${ClassName}>().lambda()
+                        .eq(${ClassName}::$pkColumn.method(), deleteVO.$pkColumn.method()())
+                        .set(${ClassName}::getDelFlag, Constants.TRUE)
+        );
+    }
+#end
+
+#if($table.hasDetails)
+#if($table.sub)
+    /**
+     * 根据Id查询
+     *
+     * @param id id
+     * @return 结果
+     */
+    @Override
+    public ${ClassName}DetailsBO getDetailsById(Long id) {
+        ${ClassName}DetailsBO byId = baseMapper.getDetailsById(id);
+        if(byId != null && !byId.getKgId().equals(SecurityUtils.getUserKgId())){
+            throw new ServiceException(ErrorEnums.IDENTITY_ILLEGAL);
+        }
+        return byId;
+    }
+#else
+    /**
+     * 根据Id查询
+     *
+     * @param id id
+     * @return 结果
+     */
+    @Override
+    public ${ClassName}DetailsBO getDetailsById(Long id) {
+        ${ClassName} data = this.getById(id);
+        if(data != null && !data.getKgId().equals(SecurityUtils.getUserKgId())){
+            throw new ServiceException(ErrorEnums.IDENTITY_ILLEGAL);
+        }
+        ${ClassName}DetailsBO detailsBO = new ${ClassName}DetailsBO();
+        BeanUtils.copyBeanProp(detailsBO, data);
+        return detailsBO;
+    }
+#end
+#end
+
+#if($table.hasExport)
+#if(!$table.sub)
+    /**
+     * 条件查询
+     *
+     * @param queryVO 导出查询入参
+     * @return 结果
+     */
+    @Override
+    public List<${ClassName}BO> queryList(${ClassName}QueryVO queryVO) {
+        QueryWrapper<${ClassName}> queryWrapper = new QueryWrapper<>();
+        ${ClassName} data = new ${ClassName}();
+        BeanUtils.copyBeanProp(data, queryVO);
+        queryWrapper.setEntity(data);
+        queryWrapper.lambda().orderByDesc(${ClassName}::getCreateTime);
+        #foreach($column in $vueColumns)
+            #if($column.isQuery == 1 && $column.queryType == "LIKE")
+        if(StringUtils.isNotEmpty(queryVO.${column.method()}())){
+            queryWrapper.lambda().like(${ClassName}::${column.method()}, queryVO.${column.method()}());
+        }
+            #end
+        #end
+        List<${ClassName}> list = this.list(queryWrapper);
+        return list.stream().map(item -> {
+            ${ClassName}BO bo = new ${ClassName}BO();
+            BeanUtils.copyBeanProp(bo, item);
+            return bo;
+        }).collect(Collectors.toList());
+    }
+#else
+    /**
+     * 条件查询
+     *
+     * @param queryVO 导出查询入参
+     * @return 结果
+     */
+    @Override
+    public List<${ClassName}BO> queryList(${ClassName}QueryVO queryVO) {
+        return baseMapper.detailsListPage(null, queryVO);
+    }
+#end
+#end
+
+    /**
+     * 获取并校验当前用户是否能查看和操作id对应的数据
+     *
+     * @param id id
+     * @return 结果
+     */
+    @Override
+    public ${ClassName} getAndVerify${ClassName} (Long id){
+        // 1.根据id查询
+        ${ClassName} data = super.getById(id);
+        // 2.判断是否有数据
+        if(data == null){
+            throw new ServiceException(ErrorEnums.UPDATE_FAIL);
+        }
+        // 3.判断当前用户是否能查看或操作id对应的数据
+        if(!Objects.equals(data.getKgId(), SecurityUtils.getUserKgId())){
+            throw new ServiceException(ErrorEnums.IDENTITY_ILLEGAL);
+        }
+        return data;
+    }
+}

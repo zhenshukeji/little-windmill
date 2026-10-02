@@ -1,0 +1,180 @@
+# 开发环境配置
+server:
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 200
+      # Tomcat启动初始化的线程数，默认值25
+      min-spare: 55
+  # SpringBoot优雅关闭; SpringBoot应用关闭是会处理完所有的请求再结束应用, 并拒绝后面的请求;
+  shutdown: graceful
+
+# 日志配置
+logging:
+  level:
+    com.zhenshu: debug
+    org.springframework: warn
+# Spring配置
+spring:
+  lifecycle:
+    # 优雅关闭超时时间; 优雅关闭在指定时间内未执行完成, 强制关闭应用
+    timeout-per-shutdown-phase: 30s
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size:  10MB
+      # 设置总上传的文件大小
+      max-request-size:  20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  # 允许预检请求
+  mvc:
+    dispatch-options-request: true
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      # 初始连接数
+      initialSize: 30
+      # 最小连接池数量
+      minIdle: 30
+      # 最大连接池数量
+      maxActive: 250
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+      # 配置监控页功能
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: ${DRUID_CONSOLE_PASSWORD:}
+        resetEnable: false
+  # cache 配置
+  redis:
+    # 连接超时时间
+    timeout: 10s
+    jedis:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 20
+        # 连接池中的最大空闲连接
+        max-idle: 250
+        # 连接池的最大数据库连接数
+        max-active: 250
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 2000ms
+    wx:
+      #单位毫秒
+      timeout: 10000
+      max-wait: 2000
+
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mybatis/**/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.zhenshu.parent.app.domain
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+    logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull
+    jdbc-type-for-null: 'null'
+  type-enums-package: com.zhenshu.parent.common.constant.enums
+
+# cdn
+aliyun:
+  endpoint: oss-cn-beijing.aliyuncs.com
+  accessKeyId: ${ALIYUN_ACCESS_KEY_ID:}
+  accessKeySecret: ${ALIYUN_ACCESS_KEY_SECRET:}
+  bucketName: zhens
+  address: https://${CDN_URL:}/
+  projectName: template
+
+# swagger配置信息，接口文档访问地址 http://host:ip/doc.html
+swagger:
+  # 标题
+  title: 幼儿园小程序
+  # 描述
+  description: 幼儿园小程序
+  # 业务接口
+  terms-of-service-url: https://${API_BASE_URL:http://localhost:8184}/api/dev/kgParent/
+  license: Powered By ZS
+  # 分组
+  mini:
+    groupName: 小程序
+    basePackage: com.zhenshu.parent.app.controller
+    pathMapping: /
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期，单位秒
+  expireTime: 48000
+
+# 接口文档增强模式配置，文档地址：https://doc.xiaominfo.com/knife4j/documentation/enhance.html
+knife4j:
+  # 安全校验
+  basic:
+    enable: false
+    # 账号
+    username: admin
+    # 密码
+    password: ${SWAGGER_PASSWORD:}
+  # 配置
+  setting:
+    # 是否显示界面中 SwaggerModel 功能
+    enableSwaggerModels: false
+    # 是否在每个 Debug 调试栏后显示刷新变量按钮，默认不显示
+    enableReloadCacheParameter: false
+    # 是否开启界面中对某接口的版本控制，如果开启，后端变化后 Ui 界面会存在小蓝点
+    enableVersion: false
+
+# parent 配置
+parent-config:
+  profile: ${APP_PROFILE:./downloadFile/}
+  upload-path: ${UPLOAD_PATH:./data/files}
+  file-url-prefix: ${FILE_URL_PREFIX:http://127.0.0.1:8184/files}
+  uploadLimit: ["BMP", "JPG", "JPEG", "PNG", "TIF", "GIF", "PCX", "TGA", "EXIF", "FPX", "SVG", "CDR", "PCD", "DXF", "UFO", "EPS", "RAW", "WMF", "WEBP", "MP4", "AVI", "NAVI", "DV-AVI", "DIVX", "MOV", "ASF", "WMV", "RM", "RMVB", "MPG", "FLV"]

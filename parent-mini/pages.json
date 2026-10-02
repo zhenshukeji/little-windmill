@@ -1,0 +1,122 @@
+{
+    "pages": [
+        {
+            "path": "pages/tabbar/home/home",
+            "style": {
+                "navigationBarTitleText": "首页",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/tabbar/my/my",
+            "style": {
+                "navigationBarTitleText": "我的",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "风车智慧幼教"
+            }
+        },
+        {
+            "path": "pages/home/program-list/program-list",
+            "style": {
+                "navigationBarTitleText": "教学计划",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/home/program-detail/program-detail",
+            "style": {
+                "navigationBarTitleText": "教学详情",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/my/my-info/my-info",
+            "style": {
+                "navigationBarTitleText": "我的资料",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/my/my-class/my-class",
+            "style": {
+                "navigationBarTitleText": "我的班级",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/tabbar/apply/apply",
+            "style": {
+                "navigationBarTitleText": "申请",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/home/school-survey/school-survey",
+            "style": {
+                "navigationBarTitleText": "园区概况",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/apply/add-vacate/add-vacate",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/apply/apply-detail/vacate",
+            "style": {
+                "navigationBarTitleText": "请假申请详情",
+                "enablePullDownRefresh": false
+            }
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "风车智慧幼教",
+        "navigationBarBackgroundColor": "#F6F7F2",
+        "navigationStyle": "custom",
+        "backgroundColor": "#F6F7F2",
+        "app-plus": {
+            "background": "#efeff4"
+        }
+    },
+    "tabBar": {
+        "backgroundColor": "#fff",
+        "borderStyle": "white",
+        "color": "#CFCFCF",
+        "selectedColor": "#27846F",
+        "list": [
+            {
+                "text": "首页",
+                "pagePath": "pages/tabbar/home/home",
+                "iconPath": "static/images/tabbar/home.png",
+                "selectedIconPath": "static/images/tabbar/home1.png"
+            },
+            {
+                "text": "申请",
+                "pagePath": "pages/tabbar/apply/apply",
+                "iconPath": "static/images/tabbar/apply.png",
+                "selectedIconPath": "static/images/tabbar/apply1.png"
+            },
+            {
+                "text": "我的",
+                "pagePath": "pages/tabbar/my/my",
+                "iconPath": "static/images/tabbar/my.png",
+                "selectedIconPath": "static/images/tabbar/my1.png"
+            }
+        ]
+    },
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+            "tui-(.*)": "thorui-uni/lib/thorui/tui-$1/tui-$1.vue"
+        }
+    }
+}

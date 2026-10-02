@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.kg.base.advanced.mapper.SchoolSurveyMapper">
+    <sql id="joinColumn">
+        kg_school_survey.id `id`,
+        kg_school_survey.kg_id `kgId`,
+        kg_school_survey.img_url `imgUrl` ,
+        kg_school_survey.survey_content `surveyContent`,
+        sys_user.nick_name `modifier`,
+        kg_school_survey.update_time `updateTime`
+    </sql>
+
+    <sql id="selectJoin">
+        select <include refid="joinColumn"/> from kg_school_survey
+        left join sys_user on kg_school_survey.update_by = sys_user.user_id
+        where kg_school_survey.del_flag = 0
+    </sql>
+
+
+    <select id="getList" resultType="schoolSurveyDetailsBO">
+        <include refid="selectJoin"/> and kg_school_survey.kg_id = #{kgId}
+    </select>
+</mapper>

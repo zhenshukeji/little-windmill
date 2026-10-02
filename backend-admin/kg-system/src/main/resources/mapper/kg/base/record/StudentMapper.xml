@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.kg.base.record.mapper.StudentMapper">
+<select id="detailsListPage" resultType="studentBO">
+        SELECT
+        kg_student.id `id`,
+        kg_student.NAME `name`,
+        kg_student.gender `gender`,
+        kg_student.is_weak `isWeak`,
+        kg_student.special_case `specialCase`,
+        kg_student.real_img_url `realImgUrl`,
+        kg_student.update_time `updateTime`,
+        kg_classroom.class_name,
+        temp.`name` guardianName,
+        temp.phone guardianPhone
+        FROM
+        kg_student
+        LEFT JOIN kg_classroom ON kg_student.class_id = kg_classroom.id
+        LEFT JOIN ( SELECT student_id, GROUP_CONCAT( NAME ) NAME, GROUP_CONCAT( phone ) phone FROM kg_guardian WHERE
+        kg_id = #{queryVO.kgId} GROUP BY student_id ) temp ON temp.student_id = kg_student.id
+        WHERE
+        kg_student.del_flag = 0
+        AND kg_student.kg_id = #{queryVO.kgId}
+        <if test="queryVO.classId != null">
+            AND kg_classroom.id = #{queryVO.classId}
+        </if>
+        <if test="queryVO.isWeak != null">
+            AND kg_student.is_weak = #{queryVO.isWeak}
+        </if>
+        <if test="queryVO.hasFace != null">
+            <if test="queryVO.hasFace">
+                AND (kg_student.real_img_url IS NOT NULL AND kg_student.real_img_url != '')
+            </if>
+            <if test="!queryVO.hasFace">
+                AND (kg_student.real_img_url IS NULL OR kg_student.real_img_url = '')
+            </if>
+        </if>
+        AND kg_student.is_leave_school = 0
+        <if test="queryVO.info != null and queryVO.info.trim() != ''">
+            AND ( temp.`name` LIKE concat('%', #{queryVO.info}, '%') OR temp.phone LIKE concat('%', #{queryVO.info},
+            '%') OR kg_student.NAME LIKE concat('%', #{queryVO.info}, '%') )
+        </if>
+        ORDER BY
+        kg_student.create_time DESC
+    </select>
+    <select id="listHistoryPage" resultType="StudentHistoryBO">
+        SELECT
+        ks.id,
+        ks.NAME,
+        ks.gender,
+        ks.birthdate,
+        kc.class_name,
+        kg.NAME guardianName,
+        kg.phone guardianPhone,
+        ks.is_weak,
+        ks.special_case
+        FROM
+        kg_student ks
+        LEFT JOIN ( SELECT student_id, GROUP_CONCAT( NAME ) NAME, GROUP_CONCAT( phone ) phone FROM kg_guardian WHERE
+        kg_id = #{queryVO.kgId} GROUP BY student_id ) kg ON kg.student_id = ks.id
+        LEFT JOIN kg_classroom kc ON ks.class_id = kc.id
+        WHERE
+        ks.del_flag = 0
+        AND ks.kg_id = #{queryVO.kgId}
+        AND ks.is_leave_school = 1
+        <if test="queryVO.type == 0">
+            <if test="queryVO.identityNumber != null and queryVO.identityNumber.trim() != ''">
+                AND ks.card_number LIKE concat('%', #{queryVO.identityNumber}, '%')
+            </if>
+        </if>
+        <if test="queryVO.type == 1">
+            <if test="queryVO.info != null and queryVO.info.trim() != ''">
+                AND ( ks.name LIKE concat('%', #{queryVO.info}, '%')
+                OR kg.phone LIKE concat('%', #{queryVO.info}, '%') )
+            </if>
+        </if>
+        ORDER BY
+        ks.create_time DESC
+    </select>
+
+    <select id="selectExportList" resultType="java.util.Map">
+        SELECT
+        <trim suffixOverrides=",">
+            <if test="exportVO.gender">
+                CASE
+                ks.gender
+                WHEN 0 THEN
+                '男'
+                WHEN 1 THEN
+                '女' ELSE '未知'
+                END '性别',
+            </if>
+            <if test="exportVO.nation">
+                IFNULL( ks.nation, '' ) '民族',
+            </if>
+            <if test="exportVO.healthStatus">
+                IFNULL( ks.health_status, '' ) '健康状况',
+            </if>
+            <if test="exportVO.cardType">
+                IFNULL( ks.card_type, '' ) '证件类型',
+            </if>
+            <if test="exportVO.cardNumber">
+                IFNULL( ks.card_number, '' ) '证件号码',
+            </if>
+            <if test="exportVO.className">
+                IFNULL( kc.class_name, '' ) '班级',
+            </if>
+            <if test="exportVO.studyingWay">
+                IFNULL( ks.studying_way, '' ) '就读方式',
+            </if>
+            <if test="exportVO.birthdate">
+                IFNULL( ks.birthdate, '' ) '出生日期',
+            </if>
+            <if test="exportVO.nativePlace">
+                IFNULL( ks.native_place, '' ) '籍贯',
+            </if>
+            <if test="exportVO.accountType">
+                IFNULL( ks.account_type, '' ) '户口类型',
+            </if>
+            <if test="exportVO.address">
+                IFNULL( ks.address, '' ) '现住址',
+            </if>
+            <if test="exportVO.guardianNameOne">
+                IFNULL( SUBSTRING_INDEX( kg.NAME, ',', 1 ), '' ) '监护人1',
+            </if>
+            <if test="exportVO.guardianNameTwo">
+                if(FIND_IN_SET(',',kg.NAME), SUBSTRING_INDEX( kg.NAME, ',', - 1 ), '')'监护人2',
+            </if>
+            <if test="exportVO.guardianPhoneOne">
+                IFNULL( SUBSTRING_INDEX( kg.phone, ',', 1 ), '' ) '监护人1手机号',
+            </if>
+            <if test="exportVO.guardianPhoneTwo">
+                if(FIND_IN_SET(',',kg.phone), SUBSTRING_INDEX( kg.phone, ',', - 1 ), '')'监护人2手机号',
+            </if>
+            <if test="exportVO.guardianJobOne">
+                IFNULL( SUBSTRING_INDEX( kg.job, ',', 1 ), '' ) '监护人1职业',
+            </if>
+            <if test="exportVO.guardianJobTwo">
+                if(FIND_IN_SET(',',kg.job), SUBSTRING_INDEX( kg.job, ',', - 1 ), '')'监护人2职业',
+            </if>
+            <if test="exportVO.guardianCardTypeOne">
+                IFNULL( SUBSTRING_INDEX( kg.card_type, ',', 1 ), '' ) '监护人1证件类型',
+            </if>
+            <if test="exportVO.guardianCardTypeTwo">
+                if(FIND_IN_SET(',',kg.card_type), SUBSTRING_INDEX( kg.card_type, ',', - 1 ), '')'监护人2证件类型',
+            </if>
+            <if test="exportVO.guardianCardNumberOne">
+                IFNULL( SUBSTRING_INDEX( kg.card_number, ',', 1 ), '' ) '监护人1证件号码',
+            </if>
+            <if test="exportVO.guardianCardNumberTwo">
+                if(FIND_IN_SET(',',kg.card_number), SUBSTRING_INDEX( kg.card_number, ',', - 1 ), '')'监护人2证件号码',
+            </if>
+            <if test="exportVO.guardianRelationOne">
+                IFNULL( SUBSTRING_INDEX( kg.relation, ',', 1 ), '' ) '监护人1关系',
+            </if>
+            <if test="exportVO.guardianRelationTwo">
+                if(FIND_IN_SET(',',kg.relation), SUBSTRING_INDEX( kg.relation, ',', - 1 ), '')'监护人2关系',
+            </if>
+            <if test="exportVO.isWeak">
+                CASE
+                ks.is_weak
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否高危体弱',
+            </if>
+            <if test="exportVO.isOnlyChild">
+                CASE
+                ks.is_only_child
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否独生子女',
+            </if>
+            <if test="exportVO.isLeft">
+                CASE
+                ks.is_left
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否留守学生',
+            </if>
+            <if test="exportVO.isOrphan">
+                CASE
+                ks.is_orphan
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否孤儿',
+            </if>
+            <if test="exportVO.isDisability">
+                CASE
+                ks.is_disability
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否残疾儿童',
+            </if>
+            <if test="exportVO.isWorkers">
+                CASE
+                ks.is_workers
+                WHEN 0 THEN '否'
+                WHEN 1 THEN '是'
+                ELSE ''
+                END '是否务工子女',
+            </if>
+            <if test="exportVO.name">
+                IFNULL( ks.NAME, '' ) '学生姓名',
+            </if>
+            <if test="exportVO.bloodType">
+                IFNULL( ks.blood_type, '' ) '血型',
+            </if>
+            <if test="exportVO.nationality">
+                IFNULL( ks.nationality, '' ) '国籍',
+            </if>
+            <if test="exportVO.teacher">
+                IFNULL( kks.NAME, '' ) '班主任',
+            </if>
+            <if test="exportVO.enrollDate">
+                IFNULL( ks.enroll_date, '' ) '入学日期',
+            </if>
+            <if test="exportVO.placeOfBirth">
+                IFNULL( ks.place_of_birth, '' ) '出生所在地',
+            </if>
+            <if test="exportVO.accountQuality">
+                IFNULL( ks.account_quality, '' ) '户口性质',
+            </if>
+            <if test="exportVO.accountAddress">
+                IFNULL( ks.account_address, '' ) '户口所在地',
+            </if>
+            <if test="exportVO.specialCase">
+                IFNULL( ks.special_case, '' ) '特殊情况'
+            </if>
+        </trim>
+        FROM
+        kg_student ks
+        LEFT JOIN (
+        SELECT
+        student_id,
+        GROUP_CONCAT( NAME ) NAME,
+        GROUP_CONCAT( phone ) phone,
+        GROUP_CONCAT( job ) job,
+        GROUP_CONCAT( card_number ) card_number,
+        GROUP_CONCAT( card_type ) card_type,
+        GROUP_CONCAT( relation ) relation
+        FROM
+        kg_guardian
+        WHERE
+        kg_id = #{exportVO.kgId}
+        GROUP BY
+        student_id
+        ) kg ON kg.student_id = ks.id
+        LEFT JOIN kg_classroom kc ON ks.class_id = kc.id
+        LEFT JOIN kg_kindergarten_staff kks ON kc.teacher_id = kks.id
+        WHERE
+        ks.kg_id = #{exportVO.kgId}
+        <if test="exportVO.classId != null">
+            AND ks.class_id = #{exportVO.classId}
+        </if>
+        <if test="exportVO.isWeakQuery != null">
+            AND ks.is_weak = #{exportVO.isWeakQuery}
+        </if>
+        <if test="exportVO.info != null and exportVO.info.trim() != ''">
+            AND ( kg.`name` LIKE concat('%', #{exportVO.info}, '%') OR kg.phone LIKE concat('%', #{exportVO.info},
+            '%') OR ks.NAME LIKE concat('%', #{exportVO.info}, '%') )
+        </if>
+        AND ks.is_leave_school = 0
+    </select>
+</mapper>

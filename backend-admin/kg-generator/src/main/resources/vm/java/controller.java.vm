@@ -1,0 +1,116 @@
+package ${packageName}.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zhenshu.common.annotation.Log;
+import com.zhenshu.common.config.AppConfig;
+import com.zhenshu.common.core.domain.AjaxResult;
+import com.zhenshu.common.utils.SecurityUtils;
+import com.zhenshu.common.enums.system.BusinessType;
+import com.zhenshu.common.utils.poi.ExcelUtil;
+import com.zhenshu.common.web.Result;
+import ${packageName}.domain.bo.${ClassName}BO;
+    #if($table.hasDetails)
+import ${packageName}.domain.bo.${ClassName}DetailsBO;
+    #end
+    #if($table.hasList)
+import ${packageName}.domain.vo.${ClassName}QueryVO;
+    #end
+    #if($table.hasUpdate)
+import ${packageName}.domain.vo.${ClassName}EditVO;
+    #end
+    #if($table.hasInsert)
+import ${packageName}.domain.vo.${ClassName}AddVO;
+    #end
+    #if($table.hasDelete)
+import ${packageName}.domain.vo.${ClassName}DeleteVO;
+    #end
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.groups.Default;
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc
+ */
+@RestController
+@RequestMapping("/${moduleName}/${businessName}")
+@PreAuthorize("@ss.hasPermi('${table.moduleName}:${table.businessName}:all')")
+@Api(tags = "$table.functionName", value = "WEB - ${ClassName}Controller", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ${ClassName}Controller {
+    @Resource
+    private I${ClassName}Service ${className}Service;
+    @Resource
+    private AppConfig appConfig;
+
+#if($table.hasList)
+    @GetMapping("/list")
+    @ApiOperation(value = "列表分页查询${table.tableComment}")
+    public Result<IPage<${ClassName}BO>> listPage(@Validated({Select.class, Default.class}) ${ClassName}QueryVO queryVO) {
+        queryVO.setKgId(SecurityUtils.getUserKgId());
+        IPage<${ClassName}BO> page = ${className}Service.listPage(queryVO);
+        return new Result<IPage<${ClassName}BO>>().success(page);
+    }
+#end
+
+#if($table.hasDelete)
+    @Log(title = "删除${table.functionName}", businessType = BusinessType.DELETE)
+    @DeleteMapping
+    @ApiOperation(value = "删除${table.tableComment}")
+    public Result<Object> deleteById(@RequestBody @Validated ${ClassName}DeleteVO deleteVO) {
+        ${className}Service.deleteById(deleteVO);
+        return new Result<>().success();
+    }
+#end
+
+#if($table.hasUpdate)
+    @Log(title = "修改${table.functionName}", businessType = BusinessType.UPDATE)
+    @PutMapping
+    @ApiOperation(value = "根据ID修改${table.tableComment}")
+    public Result<Object> updateById(@RequestBody @Validated ${ClassName}EditVO editVO) {
+        ${className}Service.updateById(editVO);
+        return new Result<>().success();
+    }
+#end
+
+#if($table.hasInsert)
+    @Log(title = "添加${table.functionName}", businessType = BusinessType.INSERT)
+    @PostMapping
+    @ApiOperation(value = "添加${table.tableComment}")
+    public Result<Object> insert(@RequestBody @Validated ${ClassName}AddVO addVO) {
+        ${className}Service.insert(addVO);
+        return new Result<>().success();
+    }
+#end
+
+#if($table.hasDetails)
+    @GetMapping("/{id}")
+    @ApiOperation(value = "根据Id查询${table.tableComment}")
+    public Result<${ClassName}DetailsBO> getDetailsById(@PathVariable("id") @ApiParam(required = true, value = "id") Long id) {
+        ${ClassName}DetailsBO detailsBO = ${className}Service.getDetailsById(id);
+        return new Result<${ClassName}DetailsBO>().success(detailsBO);
+    }
+#end
+
+#if($table.hasExport)
+    @Log(title = "导出${table.functionName}", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    @ApiOperation(value = "导出")
+    public AjaxResult export(@RequestBody @Validated ${ClassName}QueryVO queryVO) {
+        queryVO.setKgId(SecurityUtils.getUserKgId());
+        List<${ClassName}BO> list = ${className}Service.queryList(queryVO);
+        ExcelUtil<${ClassName}BO> excelUtil = new ExcelUtil<>(${ClassName}BO.class);
+        return excelUtil.exportExcel(list, "export", appConfig.getDownloadPath());
+    }
+#end
+}

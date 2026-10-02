@@ -1,0 +1,39 @@
+view {
+	box-sizing: border-box;
+}
+
+
+/* 申请状态颜色 —— 风车语义色（2026-09-22）
+   规则：状态始终同时显示文字，不靠颜色单独区分
+   status1 已同意 / status2 拒绝 / status3 撤回 / status0 待处理 */
+.status1 {
+	color: #27846F;
+}
+
+.status2 {
+	color: #B3403F;
+}
+
+.status3 {
+	color: #65766C;
+}
+
+.status0 {
+	color: #B78A32;
+}
+
+.bg1 {
+	background: #EDF5EF;
+}
+
+.bg2 {
+	background: #FDECEC;
+}
+
+.bg3 {
+	background: rgba(101, 118, 108, 0.10);
+}
+
+.bg0 {
+	background: #FBF3DF;
+}

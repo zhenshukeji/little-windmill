@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhenshu.system.business.kg.work.educational.mapper.TeachingProgramMapper">
+    <select id="listPage" resultType="teachingProgramBO">
+        SELECT
+            ktp.id 'id',
+            kc.class_name 'className',
+            ktp.plan_url 'planUrl',
+            ktp.begin_date 'beginDate',
+            kks.name 'name',
+            ktp.create_time 'createTime'
+        FROM
+            kg_teaching_program ktp
+            INNER JOIN kg_classroom kc ON kc.id = ktp.class_id
+            INNER JOIN kg_kindergarten_staff kks ON kks.uid = ktp.create_by
+        WHERE
+            ktp.kg_id = #{queryVO.kgId}
+            AND ktp.del_flag = 0
+            <if test="queryVO.beginDate!=null">
+                AND ktp.begin_date = DATE_FORMAT(#{queryVO.beginDate},'%Y-%m-%d')
+            </if>
+            <if test="queryVO.classId!=null">
+                AND ktp.class_id = #{queryVO.classId}
+            </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+package ${packageName}.domain.vo;
+
+import com.zhenshu.common.domain.PageEntity;
+import com.zhenshu.common.xss.Xss;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+
+/**
+ * @author ${author}
+ * @version 1.0
+ * @date ${datetime}
+ * @desc 查询${table.tableComment}入参
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(description = "查询${table.tableComment}入参")
+public class ${ClassName}QueryVO extends PageEntity {
+#foreach ($column in $vueColumns)
+    #if($column.isQuery == 1)
+    /**
+     * $column.columnComment
+     */
+        #if($column.javaType == "String")
+    @Xss
+    @Size(max = ${column.size})
+        #end
+    @ApiModelProperty(required = false, value = "$column.columnComment")
+    private $column.javaType $column.javaField;
+
+    #end
+#end
+}

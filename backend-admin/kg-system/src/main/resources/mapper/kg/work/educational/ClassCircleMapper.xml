@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.system.business.kg.work.educational.mapper.ClassCircleMapper">
+    <select id="listQuery" resultType="classCircleBO">
+        SELECT
+        kcc.id 'id',
+        kcc.text_content 'textContent',
+        kcc.upload_type 'uploadType',
+        kcc.create_time 'createTime',
+        su.nick_name 'username',
+        kcc.attach_url 'attachUrl',
+        kcc.create_by 'createBy',
+        kcc.kg_id
+        FROM
+        kg_class_circle kcc
+        INNER JOIN sys_user su ON kcc.create_by = su.user_id
+        WHERE
+        kcc.del_flag = 0
+        AND kcc.kg_id = #{queryVO.kgId} order by kcc.create_time desc
+    </select>
+    <update id="deleteOne">
+        update
+        kg_class_circle
+        set del_flag = 1,update_by = #{deleteVO.updateBy},update_time = #{deleteVO.updateTime}
+        where id = #{deleteVO.id} and del_flag = 0
+        <if test="deleteVO.createBy != null">
+            and create_by = #{deleteVO.createBy}
+        </if>
+    </update>
+
+</mapper>

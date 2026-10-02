@@ -1,0 +1,8 @@
+git pull origin master
+mvn clean package
+#TODO 修改端口号与项目名称
+kill $(lsof -i:8184|awk '{print $2}' |sort|uniq|awk '{if($0!="PID") print ""$0" " }')
+# PrintGCDetails 打印gc日志 | UseConcMarkSweepGC 使用CMS垃圾收集器 | CMSFullGCsBeforeCompaction 表示进行几次full gc 后进行碎片整理，用于减少大对象回收的垃圾碎片 | UseCMSCompactAtFullCollection 和 CMSFullGCsBeforeCompaction 搭配使用，默认开启 | HeapDumpOnOutOfMemoryError OOM 异常的时候自动生成 Dump 文件 |HeapDumpPath 是指生成的dump文件名 | CMSParallelRemarkEnabled 重新标记阶段进行多线程并行重新标记，减少应用暂停时间 | CMSClassUnloadingEnabled 老年代启用CMS收集器 |UseCMSInitiatingOccupancyOnly 如果没有开启的话，那么CMSInitiatingOccupancyFraction只有第一次会生效，开启后每次都会生效 | CMSInitiatingOccupancyFraction 指老年代的空间使用率达到百分之多少的时候，会进行一次CMS回收，默认 65%| DisableExplicitGC 代码里手动的 System.gc() 会不生效 | PrintGCTimeStamps 打印Gc使用时间 | UseCompressedOops 普通对象指针压缩，减少对象头的占用空间，开启前24个字节，开启后20个字节 | DoEscapeAnalysis 开启逃逸分析优化-栈上分配，方法的局部变量生成的实例在栈上分配 不在堆上分配，分配完成之后，继续在调用栈内执行，最后线程结束，栈空间被回收，局部变量对象也被回收 | MaxTenuringThreshold 设置对象晋升到老年代的阈值，当一个对象在新生代里经历过多少次 Minor GC 晋升到老年代，默认值是 6
+# TODO 正式环境如果服务器是 8G 内存，需要改成 Xmx 4096M Xms 4096M -XX:MetaspaceSize=256m
+nohup java -Xmx512m -Xms512m -XX:MetaspaceSize=102m -verbose:gc -Xloggc:./logs/gc.log -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:CMSFullGCsBeforeCompaction=8 -XX:+UseCMSCompactAtFullCollection -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./logs/heapDump.hprof -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80 -XX:+DisableExplicitGC -XX:+PrintGCTimeStamps -XX:+UseCompressedOops -XX:+DoEscapeAnalysis -XX:MaxTenuringThreshold=10 -Dfile.encoding=UTF-8 -jar target/kgParent.jar &
+tail -n 500 -f nohup.out

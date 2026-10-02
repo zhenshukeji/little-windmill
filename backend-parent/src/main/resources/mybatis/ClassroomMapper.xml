@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.parent.app.mapper.ClassroomMapper">
+    <select id="myClass" resultType="com.zhenshu.parent.app.domain.bo.my.MyClassroomBO">
+        SELECT
+            kc.id,
+            kc.class_name,
+            kg.grade_name,
+            kks1.`name` `teacherName`,
+            kks1.phone `teacherPhone`,
+            kks2.`name` `subTeacherName`,
+            kks2.phone `subTeacherPhone`
+        FROM
+            kg_classroom kc
+            LEFT JOIN kg_grade kg ON kc.grade_id = kg.id
+            LEFT JOIN kg_kindergarten_staff kks1 ON kc.teacher_id = kks1.id
+            LEFT JOIN kg_kindergarten_staff kks2 ON kc.sub_teacher_id = kks2.id
+        WHERE
+            kc.id = #{classId}
+    </select>
+</mapper>

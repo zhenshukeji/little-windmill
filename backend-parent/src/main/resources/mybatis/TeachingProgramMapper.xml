@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhenshu.parent.app.mapper.TeachingProgramMapper">
+
+    <select id="getList" resultType="com.zhenshu.parent.app.domain.bo.program.TeachingProgramPartBO">
+        select ktp.id,
+               ktp.plan_url 'planUrl',
+               ktp.begin_date 'beginDate',
+               su.nick_name 'createBy',
+               su.avatar 'avatar',
+               ktp.create_time 'createTime',
+               ktp.update_time 'updateTime'
+        from kg_teaching_program ktp join sys_user su on ktp.create_by = su.user_id
+        where ktp.class_id = (select class_id from kg_student where id = #{studentId} and del_flag = 0 and is_leave_school = 0)
+        and ktp.del_flag = 0 order by ktp.create_time desc
+    </select>
+    <select id="getListDetail" resultType="com.zhenshu.parent.app.domain.bo.program.TeachingProgramDetailBO">
+        select kc.class_name 'className',
+               ktp.plan_url 'planUrl',
+               ktp.begin_date 'beginDate',
+               su.nick_name 'createBy',
+               su.avatar 'avatar',
+               ktp.create_time 'createTime'
+        from kg_teaching_program ktp
+            join sys_user su
+                on ktp.create_by = su.user_id and su.del_flag = 0 and su.status = 0
+            join kg_classroom kc on ktp.class_id = kc.id and kc.del_flag = 0
+        where ktp.kg_id = #{student.kgId} and ktp.class_id = #{student.classId} and ktp.id = #{id}
+        and ktp.del_flag = 0
+    </select>
+
+</mapper>

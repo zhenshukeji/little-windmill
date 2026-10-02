@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>kindergarten</artifactId>
+        <groupId>com.zhenshu</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>kg-generator</artifactId>
+
+    <description>
+        generator代码生成
+    </description>
+
+    <dependencies>
+
+        <!--velocity代码生成使用模板 -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+        </dependency>
+
+        <!-- collections工具类 -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.zhenshu</groupId>
+            <artifactId>kg-common</artifactId>
+        </dependency>
+
+<!--        &lt;!&ndash; 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.swagger</groupId>-->
+<!--            <artifactId>swagger-models</artifactId>-->
+<!--            <version>1.6.2</version>-->
+<!--        </dependency>-->
+
+        <!--xiaoymin 版本的swagger ，在线文档工具-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
