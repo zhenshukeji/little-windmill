@@ -55,7 +55,8 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           const user = res.user
-          const avatar = user.avatar == "" ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          const rawAvatar = user.avatar == null ? "" : String(user.avatar);
+          const avatar = (rawAvatar === "" || rawAvatar === "None" || rawAvatar === "null") ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + rawAvatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)

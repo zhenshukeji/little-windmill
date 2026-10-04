@@ -35,7 +35,7 @@
           <el-table-column label="岗位名称" align="center" prop="posts" />
           <el-table-column label="状态" align="center">
             <template slot-scope="{row}">
-              <span style="color: #1890ff" v-if="row.status === '0'">正常</span>
+              <span style="color: #247a68" v-if="row.status === '0'">正常</span>
               <span v-if="row.status === '1'">停用</span>
             </template>
           </el-table-column>

@@ -22,14 +22,14 @@
                   <div class="name">儿童请假申请</div>
                 </el-col>
                 <el-col :span="4">
-                  <el-button style="font-size: 16px;color: #FEB72B" type="text" @click="showHistory = true">申请历史
+                  <el-button style="font-size: 16px;color: #247a68" type="text" @click="showHistory = true">申请历史
                   </el-button>
                 </el-col>
               </el-row>
             </div>
             <div class="item">
               <div class="row1 details">
-                <div>请假类型：<span style="color: #1890ff">{{ detailData.type === 0 ? "病假" : "事假" }}</span></div>
+                <div>请假类型：<span style="color: #247a68">{{ detailData.type === 0 ? "病假" : "事假" }}</span></div>
                 <div>申请日期：{{ parseTime(detailData.applyTime, "{y}-{m}-{d}") }}</div>
               </div>
               <div class="row1 details">

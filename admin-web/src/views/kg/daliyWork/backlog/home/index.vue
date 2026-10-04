@@ -353,7 +353,7 @@ export default {
         legend: {
           data: ['出勤人数']
         },
-        color: ['#3f95c2'],
+        color: ['#247a68'],
         grid: {
           left: '3%',
           right: '3%',
@@ -398,7 +398,7 @@ export default {
           top: '5%',
           left: 'center'
         },
-        color: ['#e4c477', '#d97559'],
+        color: ['#247a68', '#d9a967'],
 
         series: [
           {
@@ -440,7 +440,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   background-color: #fff;
-  border-left: 4px solid #1890ff;
+  border-left: 4px solid #247a68;
 }
 
 .head {
@@ -625,7 +625,7 @@ export default {
 
         .list_item_txt {
           cursor: pointer;
-          color: #1890ff;
+          color: #247a68;
         }
       }
     }
@@ -652,7 +652,7 @@ export default {
       font-size: 18px;
 
       .blue {
-        color: #1890ff;
+        color: #247a68;
         margin: 0 6px;
       }
     }

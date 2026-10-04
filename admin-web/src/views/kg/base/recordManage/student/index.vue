@@ -329,7 +329,7 @@ export default {
       switch (val) {
         case 0:
           window.location.href =
-            'https://${CDN_URL:}/kindergarten_admin/file/student_template.xls'
+            '/file/student_template.xlsx'
           break
         case 1:
           this.uploadVisible = true

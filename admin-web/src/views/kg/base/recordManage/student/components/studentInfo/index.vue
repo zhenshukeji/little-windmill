@@ -80,8 +80,8 @@ export default {
 
 .tab_list .active {
   border-top: 0;
-  border-bottom: 2px solid #4f93fe;
-  color: #4f93fe !important;
+  border-bottom: 2px solid #247a68;
+  color: #247a68 !important;
   background-color: #e6f7ff;
 }
 </style>

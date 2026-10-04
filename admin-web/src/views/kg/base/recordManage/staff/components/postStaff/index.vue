@@ -44,7 +44,7 @@
 
       <el-table-column label="员工姓名" align="center" prop="name">
         <template slot-scope="{ row }">
-          <span style="color: #1890ff" @click="checkInfo(row, 1)">{{
+          <span style="color: #247a68" @click="checkInfo(row, 1)">{{
             row.name
           }}</span>
         </template>
@@ -55,7 +55,7 @@
           <span
             @click="distribute(row)"
             v-if="row.postNames"
-            style="color: #1890ff"
+            style="color: #247a68"
             >{{ row.postNames }}</span
           >
           <span @click="distribute(row)" v-else style="color: #15b72a"

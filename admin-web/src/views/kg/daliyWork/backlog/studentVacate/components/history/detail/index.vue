@@ -7,7 +7,7 @@
       </div>
       <div v-if="detailData">
         <div class="desc">
-          <span>请假类型：<span style="color: #1890ff">{{ detailData.vacateType === 0 ? "病假" : "事假" }}</span></span>
+          <span>请假类型：<span style="color: #247a68">{{ detailData.vacateType === 0 ? "病假" : "事假" }}</span></span>
           <span>申请日期：{{ parseTime(detailData.applyTime, "{y}-{m}-{d}") }}</span>
         </div>
         <div class="desc">
@@ -39,7 +39,7 @@
         <div class="desc">
           <span>处理结果：
             <span v-if="detailData.status === 0" style="color: red">待处理</span>
-            <span v-if="detailData.status === 1" style="color: #1890ff">已同意</span>
+            <span v-if="detailData.status === 1" style="color: #247a68">已同意</span>
             <span v-if="detailData.status === 2" style="color: red">已拒绝</span>
             <span v-if="detailData.status === 3" style="color: red">已撤回</span>
           </span>

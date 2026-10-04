@@ -110,7 +110,7 @@ export default {
 
   .active {
     color: #fafafa;
-    background: #FEB72B !important;
+    background: #247a68 !important;
   }
 }
 
@@ -158,6 +158,6 @@ export default {
 
 // .tab .active {
 //   color: #fafafa;
-//   background: #FEB72B !important;
+//   background: #247a68 !important;
 // }
 </style>

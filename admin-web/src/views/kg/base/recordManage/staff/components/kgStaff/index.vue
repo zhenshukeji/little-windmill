@@ -39,7 +39,7 @@
 
         <el-table-column label="员工姓名" align="center" prop="name">
           <template slot-scope="{ row }">
-            <span style="color: #1890ff" @click="checkInfo(row)">{{
+            <span style="color: #247a68" @click="checkInfo(row)">{{
                 row.name
             }}</span>
           </template>
@@ -421,7 +421,7 @@ export default {
       switch (val) {
         case 0:
           window.location.href =
-            "https://${CDN_URL:}/kindergarten_admin/file/staff_template.xls";
+            '/file/staff_template.xlsx';
           break;
         case 1:
           this.uploadVisible = true;
