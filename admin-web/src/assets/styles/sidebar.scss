@@ -22,9 +22,7 @@
     overflow: hidden;
     -webkit-box-shadow: 2px 0 6px rgba(0,21,41,.35);
     box-shadow: 2px 0 6px rgba(0,21,41,.35);
-    background-color: #51cc95 !important;
-    background: url('../images/sidebar_img.png') no-repeat  bottom;
-    background-size: 200px 242px;
+    background-color: $base-menu-background !important;
 
     // reset element-ui css
     .horizontal-collapse-transition {

@@ -5,6 +5,14 @@
 @import './sidebar.scss';
 @import './btn.scss';
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #247a68 !important;
+  outline-offset: 2px;
+}
+
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -122,6 +130,7 @@ aside {
 //main-container全局样式
 .app-container {
   padding: 20px;
+  background-color: #f4f6f5;
   min-height: calc(100vh - 84px);
 }
 

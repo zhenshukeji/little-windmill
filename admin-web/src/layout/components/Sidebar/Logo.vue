@@ -3,11 +3,11 @@
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <!-- <img v-if="logo" :src="logo" class="sidebar-logo" /> -->
-        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }} </h1>
+        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }}<span class="sidebar-edition">社区版</span></h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <!-- <img v-if="logo" :src="logo" class="sidebar-logo" /> -->
-        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }} </h1>
+        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }}<span class="sidebar-edition">社区版</span></h1>
       </router-link>
     </transition>
   </div>
@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '小风车幼儿园管理系统',
+      title: '风车智慧幼教',
       logo: logoImg
     }
   }
@@ -43,6 +43,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sidebar-edition {
+  display: inline-block;
+  vertical-align: 2px;
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #c7ded5;
+  border: 1px solid #2c5a51;
+  border-radius: 4px;
+}
+
 .sidebarLogoFade-enter-active {
   transition: opacity 1.5s;
 }

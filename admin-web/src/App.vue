@@ -41,8 +41,8 @@ export default {
   cursor: pointer;
 }
 .tab_list .active {
-  border-top: 2px solid #4f93fe;
-  color: #4f93fe !important;
+  border-top: 2px solid #247a68;
+  color: #247a68 !important;
 }
 .dialog-footer{
   text-align: center;

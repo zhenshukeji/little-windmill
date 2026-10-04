@@ -1,7 +1,8 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">小风车幼儿园管理系统</h3>
+      <h3 class="title">风车智慧幼教 <span class="edition">社区版</span></h3>
+      <p class="subtitle">园所统一管理平台</p>
       <el-alert
         v-if="demoMode"
         type="warning"
@@ -10,20 +11,6 @@
         description="全部数据来自本地演示数据，不连接任何后端服务。账号可填 demo，密码任意，验证码固定 1234。"
         style="margin-bottom: 15px;"
       />
-      <el-form-item>
-        <el-row>
-          <!-- <el-button type="primary" @click="fillPw(0)">超管</el-button> -->
-          <el-col :span="8">
-            <el-button type="primary" @click="fillPw(1)">集团管理员</el-button>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="primary" @click="fillPw(2)">校区管理员</el-button>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="primary" @click="fillPw(3)">平台管理员</el-button>
-          </el-col>
-        </el-row>
-      </el-form-item>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -133,27 +120,10 @@ export default {
     this.getCookie();
   },
   methods: {
-    // 填充密码
-    fillPw(val) {
-      if(val === 0) {
-        this.loginForm.username = "admin"
-        this.loginForm.password = "admin123"
-      } else if(val === 1) {
-        this.loginForm.username = "18173591111 "
-        this.loginForm.password = "a123456789"
-      } else if(val === 2) {
-        this.loginForm.username = "18173592222"
-        this.loginForm.password = "a123456789"
-      } else {
-        this.loginForm.username = "18888888888"
-        this.loginForm.password = "admin123"
-      }
-    },
     getCode() {
       getCodeImg().then(res => {
         this.captchaOnOff = res.captchaOnOff === undefined ? true : res.captchaOnOff;
         if (this.captchaOnOff) {
-          // 演示 mock 返回的是完整 data URI（内联 SVG），真实后端返回裸 base64
           this.codeUrl = res.img && res.img.indexOf('data:') === 0 ? res.img : "data:image/gif;base64," + res.img;
           this.loginForm.uuid = res.uuid;
         }
@@ -183,7 +153,6 @@ export default {
             Cookies.remove('rememberMe');
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
-            console.log('登录成功！！！')
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;
@@ -204,20 +173,42 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login_bg.png");
-  background-size: cover;
+  background-color: #f4f6f5;
 }
 .title {
-  margin: 0px auto 30px auto;
+  margin: 0px auto 6px auto;
   text-align: center;
-  color: #707070;
+  color: #233831;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  .edition {
+    display: inline-block;
+    vertical-align: 3px;
+    margin-left: 8px;
+    padding: 1px 8px;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: #247a68;
+    border: 1px solid #c9ded4;
+    border-radius: 4px;
+    background: #eaf3ef;
+  }
+}
+.subtitle {
+  margin: 0 auto 26px auto;
+  text-align: center;
+  color: #60736b;
+  font-size: 13px;
 }
 
 .login-form {
-  border-radius: 6px;
+  border-radius: 8px;
   background: #ffffff;
+  border: 1px solid #e3e9e6;
   width: 400px;
-  padding: 25px 25px 5px 25px;
+  padding: 35px 35px 15px 35px;
   .el-input {
     height: 38px;
     input {
@@ -251,7 +242,7 @@ export default {
   bottom: 0;
   width: 100%;
   text-align: center;
-  color: #fff;
+  color: #60736b;
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
