@@ -27,10 +27,10 @@ INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_s
 (3, '教师', 'teacher', 3, '1', 1, 1, '0', '0', 2, 1, 1, 'association_id=kg_id');
 
 -- sys_user_role
-INSERT INTO `sys_user_role` (`user_id`, `role_id`) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
+INSERT INTO `sys_user_role` (`user_id`, `role_id`, `user_type`) VALUES
+(1, 1, NULL),
+(2, 2, NULL),
+(3, 3, 2);
 
 -- 角色-菜单：admin 在若依机制下为超管（user_id=1）不依赖 role_menu；园所管理员=全部保留菜单；教师=日常办公+待办审批
 -- sys_role_menu
