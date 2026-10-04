@@ -11,7 +11,7 @@
 
 ## 分别本地启动（无 Docker）
 - 管理后端：`cd backend-admin && mvn -DskipTests package && java -jar kg-admin/target/kg-admin.jar`（8179）
-- 家长后端：`cd backend-parent && mvn -DskipTests package && java -jar target/kgParent.jar`（8184）
+- 家长后端：`cd backend-parent && mvn -DskipTests package && java -jar target/windmill-community-parent-api.jar`（8184）
 - 管理前端：`cd admin-web && NODE_OPTIONS=--openssl-legacy-provider npm run build:prod`，dist 交给 nginx/静态服务器
 - 小程序：`cd parent-mini && bash scripts/build_mp_weixin.sh build`，导入微信开发者工具
 

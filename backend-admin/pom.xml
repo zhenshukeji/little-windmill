@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.zhenshu</groupId>
-    <artifactId>kindergarten</artifactId>
+    <artifactId>windmill-community</artifactId>
     <version>1.0.0</version>
 
-    <name>kindergarten</name>
+    <name>windmill-community</name>
     <url>http://www.ruoyi.vip</url>
     <description>若依管理系统</description>
 

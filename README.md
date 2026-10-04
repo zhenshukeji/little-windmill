@@ -67,7 +67,7 @@ cp .env.example .env
 # 启动家长端后端（8184）
 cd backend-parent
 mvn clean package -DskipTests
-java -jar target/kgParent.jar --server.port=8184 ...
+java -jar target/windmill-community-parent-api.jar --server.port=8184 ...
 
 # 启动管理端后端（8179）
 cd backend-admin
