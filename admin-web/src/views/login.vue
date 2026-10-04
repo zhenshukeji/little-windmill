@@ -116,7 +116,7 @@ export default {
       // 注册开关
       register: false,
       // 演示模式（数据来自 src/mock）
-      demoMode: false
+      demoMode: false,
       redirect: undefined
     };
   },

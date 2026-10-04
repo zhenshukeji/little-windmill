@@ -177,13 +177,6 @@ public class LoginFacade {
     }
 
     /**
-     * 演示专用登录：跳过微信 code 换 openid，直接用手机号签发 token。
-     * 仅社区演示环境用于验收，正式上线前必须删除本方法与对应端点。
-     */
-        return this.checkAndSaveUser(phone, "demo_openid_" + phone);
-    }
-
-    /**
      * 微信code换取手机号码
      *
      * @param phoneCode 手机号code

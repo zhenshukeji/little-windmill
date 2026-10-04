@@ -35,7 +35,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: `https://${API_BASE_URL:http://localhost:8184}/api/dev/Kindergarten`,
+        target: process.env.API_BASE_URL || 'http://localhost:8184',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
