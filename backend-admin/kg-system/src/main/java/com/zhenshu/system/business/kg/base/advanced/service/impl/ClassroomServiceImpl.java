@@ -463,7 +463,9 @@ public class ClassroomServiceImpl extends ServiceImpl<ClassroomMapper, Classroom
                                 .or(queryOr -> queryOr.eq(Classroom::getTeacherId, kgStaffId))
         ).eq(Classroom::getKgId, kgId)
                 .select(Classroom::getId, Classroom::getClassName);
-        Classroom classroom = getOne(wrapper);
+        // 一个教师可能同时是多个班级的班主任/配班教师，取第一条即可；
+        // getOne 默认在命中多行时抛 TooManyResultsException，会让"请假审批待办"等页面 500
+        Classroom classroom = getOne(wrapper, false);
         if (classroom != null) {
             ClassroomPartBO partBO = new ClassroomPartBO();
             partBO.setClassName(classroom.getClassName());
