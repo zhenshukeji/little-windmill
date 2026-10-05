@@ -3,9 +3,11 @@ import defaultSettings from '@/settings'
 const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
+// 旧主题缓存（若依默认蓝）不是社区版品牌色：命中则迁移到主色，避免历史缓存造成页签/强调色仍是蓝色
+const legacyTheme = ['#409eff', '#1890ff'].includes((storageSetting.theme || '').toLowerCase())
 const state = {
   title: '',
-  theme: storageSetting.theme || '#409EFF',
+  theme: legacyTheme ? '#247A68' : (storageSetting.theme || '#247A68'),
   sideTheme: storageSetting.sideTheme || sideTheme,
   showSettings: showSettings,
   topNav: storageSetting.topNav === undefined ? topNav : storageSetting.topNav,
