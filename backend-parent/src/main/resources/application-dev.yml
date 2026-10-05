@@ -52,21 +52,12 @@ wx-mp:
 
 # 微信小程序配置
 wx-mini:
-  # 商户id
-  mch-id: ${WX_MCH_ID:}
-  # 商户key
-  mch-key: ${WX_MCH_KEY:}
-  # 商户证书文件路径
-  # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
-  key-path: classpath:mp/haibei/apiclient_cert.p12
   # 小程序appid
   app-id: ${WX_APP_ID:your-app-id}
   # 小程序秘钥
   app-secret: ${WX_APP_SECRET:${WX_APP_SECRET:your-app-secret}}
   # 接口地址前缀
   requestAddressPrefix: https://${API_BASE_URL:http://localhost:8184}/api/dev/kgParent/
-  # 微信支付回调地址
-  notify-url: ${wx-mini.requestAddressPrefix}/wx/order/pay-callback
 
 # 阿里云短信
 aliyun-sms:

@@ -37,7 +37,6 @@
         <aliyun-sdk-geoip.version>1.0.4</aliyun-sdk-geoip.version>
         <druid.version>1.1.21</druid.version>
         <poi.version>4.1.2</poi.version>
-        <pay.version>4.2.0</pay.version>
         <pagehelper.spring.boot.starter.version>1.2.5</pagehelper.spring.boot.starter.version>
         <sentry.version>1.7.27</sentry.version>
         <getsentry.version>8.0.2</getsentry.version>
@@ -280,13 +279,6 @@
                     <groupId>com.github.jsqlparser</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!--微信支付代码包-->
-        <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>weixin-java-pay</artifactId>
-            <version>${pay.version}</version>
         </dependency>
 
         <!--sentry 日志收集工具-->

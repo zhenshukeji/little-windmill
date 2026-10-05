@@ -42,3 +42,12 @@ nbdist/
 !*/build/*.html
 !*/build/*.xml
 ./downloadFile/
+
+######################################################################
+# 敏感文件：微信支付商户证书 / 私钥（禁止入库，见 RISK_REGISTER CU-R05）
+src/main/resources/mp/haibei/
+apiclient_cert.p12
+apiclient_cert.pem
+apiclient_key.pem
+*.p12
+*.pfx
